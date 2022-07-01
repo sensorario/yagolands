@@ -46,6 +46,14 @@ class Tree {
         }
     }
 
+    lookupTable() {
+        let table = [];
+        let newItem = { building: 'castle', level: 1, requires: null };
+        table.push(newItem);
+
+        return table;
+    }
+
 }
 
 module.exports = Tree

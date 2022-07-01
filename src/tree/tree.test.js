@@ -46,3 +46,18 @@ test('extract one single building from the tree', () => {
         name: 'xxx'
     });
 });
+
+test('extract lookup table', () => {
+        const t = new Tree;
+    builder = new Building()
+    builder.define({
+        name: 'iron',
+        amount: 10,
+    });
+    t.addBuilding('castle', builder);
+    expect(t.lookupTable()).toEqual([{
+        building: 'castle',
+        level: 1,
+        requires: null 
+    }]);
+});
