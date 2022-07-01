@@ -96,13 +96,17 @@ test('detect other building has requirements', () => {
 
     stall.define({ name: 'iron', amount: 10, });
     t.addBuilding('stall', stall, 1, 'windmill', 1);
+    t.addBuilding('stall', stall, 1, 'house', 1);
 
     let data = [{
         req: { requiredBuilding: 'stall', requiredLevel: 1 },
-        res: { requiredBuilding: 'windmill', requiredLevel: 1 },
+        res: [
+            { requiredBuilding: 'windmill', requiredLevel: 1 },
+            { requiredBuilding: 'house', requiredLevel: 1 },
+        ],
     },{
         req: { requiredBuilding: 'windmill', requiredLevel: 1 },
-        res: { requiredBuilding: 'castle', requiredLevel: 1 },
+        res: [{ requiredBuilding: 'castle', requiredLevel: 1 }],
     }];
 
     for(let i = 0; i < data.length; i++) {

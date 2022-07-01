@@ -66,11 +66,13 @@ class Tree {
 
     needsRequirements(requested) {
         if (this.buildings.length === 1) return false;
+        let requirements = [];
         for(let i = 0; i < this.table.length; i++) {
             if (this.table[i].building == requested.requiredBuilding) {
-                return this.table[i].requires;
+                requirements.push(this.table[i].requires);
             }
         }
+        return requirements;
     }
 
 }
