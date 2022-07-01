@@ -6,6 +6,7 @@ class Building {
     }
 
     define(name, res) {
+        this.name = name;
         this.res = res;
     }
 
@@ -25,6 +26,9 @@ class Building {
         return Math.round(res);
     }
 
+    get() {
+        return this.res;
+    }
 }
 
 module.exports = Building

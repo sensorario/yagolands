@@ -13,6 +13,19 @@ test('building time require building level', () => {
     expect(function() { building.time() }).toThrow('missing level');
 })
 
+test('provide resources', () => {
+    building.define('castle', [{
+        name: 'iron',
+        amount: 32,
+    }, {
+        name: 'wood',
+        amount: 43,
+    }])
+
+    expect(building.get())
+        .toEqual([{ name: 'iron', amount: 32, }, { name: 'wood', amount: 43, }]);
+})
+
 test('building time of a building is sum of its resources', () => {
     const data = [
         { building: 'castle', level: 0, res: [{ name: 'iron', amount: 10, }], expectedAmount: 10, },

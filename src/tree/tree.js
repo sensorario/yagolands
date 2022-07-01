@@ -15,6 +15,26 @@ class Tree {
         });
     }
 
+    get(building) {
+        for(let i = 0; i < this.buildings.length; i++) {
+            if (this.buildings[i].name === building) {
+                return {
+                    name: this.buildings[i].name
+                };
+            }
+        }
+    }
+
+    listBuildings() {
+        let list = [];
+        for(let i = 0; i < this.buildings.length; i++) {
+            list.push({
+                name: this.buildings[i].name
+            });
+        }
+
+        return list;
+    }
 }
 
 module.exports = Tree
