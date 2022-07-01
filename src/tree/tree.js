@@ -2,16 +2,30 @@ class Tree {
 
     constructor() {
         this.buildings = [];
+        this.table = [];
     }
 
     isEmpty() {
         return this.buildings.length === 0;
     }
 
-    addBuilding(name, building) {
+    addBuilding(name, building, level, requiredBuilding, requestedLevel) {
         this.buildings.push({
             name: name,
             building: building,
+        });
+
+        let requires = requiredBuilding && requestedLevel
+            ? {
+                requiredBuilding: requiredBuilding,
+                requiredLevel: requestedLevel,
+            }
+            : null;
+
+        this.table.push({
+            building: name,
+            level: 1,
+            requires: requires,
         });
     }
 
@@ -47,19 +61,16 @@ class Tree {
     }
 
     lookupTable() {
-        let table = [];
-        let newItem = { building: 'castle', level: 1, requires: null };
-        table.push(newItem);
-
-        return table;
+        return this.table;
     }
 
     needsRequirements(requested) {
         if (this.buildings.length === 1) return false;
-        return {
-            requiredBuilding: 'castle',
-            requiredLevel: 1
-        };
+        for(let i = 0; i < this.table.length; i++) {
+            if (this.table[i].building == requested.requiredBuilding) {
+                return this.table[i].requires;
+            }
+        }
     }
 
 }

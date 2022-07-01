@@ -48,7 +48,7 @@ test('extract one single building from the tree', () => {
 });
 
 test('extract lookup table', () => {
-        const t = new Tree;
+    const t = new Tree;
     builder = new Building()
     builder.define({
         name: 'iron',
@@ -82,14 +82,31 @@ test('detect other building has requirements', () => {
 
     let castle = new Building();
     let house = new Building();
+    let windmill = new Building();
+    let stall = new Building();
 
     castle.define({ name: 'iron', amount: 10, });
     t.addBuilding('castle', castle);
+
     house.define({ name: 'iron', amount: 10, });
     t.addBuilding('house', house, 1, 'castle', 1);
 
-    let req = { requiredBuilding: 'house', requiredLevel: 1, };
-    let res = { requiredBuilding: 'castle', requiredLevel: 1, };
+    windmill.define({ name: 'iron', amount: 10, });
+    t.addBuilding('windmill', windmill, 1, 'castle', 1);
 
-    expect(t.needsRequirements(req)).toEqual(res)
+    stall.define({ name: 'iron', amount: 10, });
+    t.addBuilding('stall', stall, 1, 'windmill', 1);
+
+    let data = [{
+        req: { requiredBuilding: 'stall', requiredLevel: 1 },
+        res: { requiredBuilding: 'windmill', requiredLevel: 1 },
+    },{
+        req: { requiredBuilding: 'windmill', requiredLevel: 1 },
+        res: { requiredBuilding: 'castle', requiredLevel: 1 },
+    }];
+
+    for(let i = 0; i < data.length; i++) {
+        expect(t.needsRequirements(data[i].req))
+            .toEqual(data[i].res)
+    }
 });
