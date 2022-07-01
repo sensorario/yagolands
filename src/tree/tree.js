@@ -54,6 +54,10 @@ class Tree {
         return table;
     }
 
+    needsRequirements() {
+        return false
+    }
+
 }
 
 module.exports = Tree

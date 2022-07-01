@@ -61,3 +61,18 @@ test('extract lookup table', () => {
         requires: null 
     }]);
 });
+
+test('detect first building has no requirements', () => {
+    const t = new Tree;
+    builder = new Building()
+    builder.define({
+        name: 'iron',
+        amount: 10,
+    });
+    t.addBuilding('castle', builder);
+    let req = {
+        requiredBuilding: 'castle',
+        requiredLevel: 1,
+    };
+    expect(t.needsRequirements(req)).toBe(false);
+});
