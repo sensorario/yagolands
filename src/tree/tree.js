@@ -54,8 +54,12 @@ class Tree {
         return table;
     }
 
-    needsRequirements() {
-        return false
+    needsRequirements(requested) {
+        if (this.buildings.length === 1) return false;
+        return {
+            requiredBuilding: 'castle',
+            requiredLevel: 1
+        };
     }
 
 }
