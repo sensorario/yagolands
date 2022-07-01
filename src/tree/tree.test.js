@@ -81,22 +81,15 @@ test('detect other building has requirements', () => {
     const t = new Tree;
 
     let castle = new Building();
+    let house = new Building();
+
     castle.define({ name: 'iron', amount: 10, });
     t.addBuilding('castle', castle);
-        
-    let house = new Building();
     house.define({ name: 'iron', amount: 10, });
     t.addBuilding('house', house, 1, 'castle', 1);
 
-    let req = {
-        requiredBuilding: 'house',
-        requiredLevel: 1,
-    };
-
-    let res = {
-        requiredBuilding: 'castle',
-        requiredLevel: 1,
-    };
+    let req = { requiredBuilding: 'house', requiredLevel: 1, };
+    let res = { requiredBuilding: 'castle', requiredLevel: 1, };
 
     expect(t.needsRequirements(req)).toEqual(res)
 });
