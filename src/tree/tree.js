@@ -35,6 +35,17 @@ class Tree {
 
         return list;
     }
+
+    extractBuilding(buildingName) {
+        for(let i = 0; i < this.buildings.length; i++) {
+            if (this.buildings[i].name === buildingName) {
+                return {
+                    name: this.buildings[i].name
+                };
+            }
+        }
+    }
+
 }
 
 module.exports = Tree

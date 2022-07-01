@@ -33,3 +33,16 @@ test('accept independent building', () => {
     t.addBuilding('castle', builder);
     expect(t.isEmpty()).toBe(false);
 });
+
+test('extract one single building from the tree', () => {
+        const t = new Tree;
+    builder = new Building()
+    builder.define({
+        name: 'iron',
+        amount: 10,
+    });
+    t.addBuilding('xxx', builder);
+    expect(t.extractBuilding('xxx')).toEqual({
+        name: 'xxx'
+    });
+});
