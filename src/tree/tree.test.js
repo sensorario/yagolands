@@ -54,8 +54,9 @@ test('extract lookup table', () => {
         name: 'iron',
         amount: 10,
     });
-    t.addBuilding('castle', builder);
+    t.addBuilding('castle', builder, 1);
     expect(t.lookupTable()).toEqual([{
+        identifier: 'castle.1',
         building: 'castle',
         level: 1,
         requires: null 
@@ -93,6 +94,7 @@ test('detect other building has requirements', () => {
 
     windmill.define({ name: 'iron', amount: 10, });
     t.addBuilding('windmill', windmill, 1, 'castle', 1);
+    t.addBuilding('windmill', windmill, 2, 'castle', 3);
 
     stall.define({ name: 'iron', amount: 10, });
     t.addBuilding('stall', stall, 1, 'windmill', 1);
@@ -106,7 +108,14 @@ test('detect other building has requirements', () => {
         ],
     },{
         req: { requiredBuilding: 'windmill', requiredLevel: 1 },
-        res: [{ requiredBuilding: 'castle', requiredLevel: 1 }],
+        res: [
+            { requiredBuilding: 'castle', requiredLevel: 1 },
+        ],
+    },{
+        req: { requiredBuilding: 'windmill', requiredLevel: 2 },
+        res: [
+            { requiredBuilding: 'castle', requiredLevel: 3 },
+        ],
     }];
 
     for(let i = 0; i < data.length; i++) {

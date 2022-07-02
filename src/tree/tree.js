@@ -22,9 +22,12 @@ class Tree {
             }
             : null;
 
+        let ultimateLevel = requestedLevel || 1;
+
         this.table.push({
+            identifier: name + '.' + level,
             building: name,
-            level: 1,
+            level: ultimateLevel,
             requires: requires,
         });
     }
@@ -68,10 +71,15 @@ class Tree {
         if (this.buildings.length === 1) return false;
         let requirements = [];
         for(let i = 0; i < this.table.length; i++) {
-            if (this.table[i].building == requested.requiredBuilding) {
-                requirements.push(this.table[i].requires);
+            if (
+                this.table[i].building == requested.requiredBuilding
+            ) {
+                if (this.table[i].identifier === requested.requiredBuilding + '.' + requested.requiredLevel) {
+                    requirements.push(this.table[i].requires)
+                }
             }
         }
+    
         return requirements;
     }
 
