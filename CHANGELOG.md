@@ -6,3 +6,4 @@
  - add jest as test framework
  - add building and resources basic definition
  - add building to the building tree
+ - extract building requirements
