@@ -19,5 +19,6 @@ test('game can start with building tree and units defined', () => {
 
     expect(game.canStart()).toBe(true);
     expect(game.numbweOfBuildings()).toEqual(1);
+    expect(game.numbweOfUnits()).toEqual(1);
 })
 

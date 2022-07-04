@@ -12,10 +12,15 @@ class Game {
     addBuildingTreeAndUnits(tree, units) {
         this.startable = true;
         this.tree = tree;
+        this.units = units;
     }
 
     numbweOfBuildings() {
         return this.tree.numbweOfBuildings();
+    }
+
+    numbweOfUnits() {
+        return this.units.length;
     }
 
 }
