@@ -10,17 +10,21 @@ class Tree {
     }
 
     addBuilding(name, building, level, requiredBuilding, requestedLevel) {
-        this.buildings.push({
-            name: name,
-            building: building,
-        });
-
         let requires = requiredBuilding && requestedLevel
             ? {
                 requiredBuilding: requiredBuilding,
                 requiredLevel: requestedLevel,
             }
             : null;
+
+        if (this.isEmpty() === false && requires === null) {
+            throw 'ma porc'
+        }
+
+        this.buildings.push({
+            name: name,
+            building: building,
+        });
 
         let ultimateLevel = requestedLevel || 1;
 

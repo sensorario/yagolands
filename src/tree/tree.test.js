@@ -18,6 +18,19 @@ test('list all buildings inside the tree', () => {
     }]);
 });
 
+test('only first item in the tree must can have empty requirements', () => {
+    const t = new Tree;
+    builder = new Building()
+    builder.define({
+        name: 'iron',
+        amount: 10,
+    });
+    t.addBuilding('xxx', builder);
+    expect(function () {
+        t.addBuilding('xxx', builder);
+    }).toThrow('ma porc')
+});
+
 test('start empty', () => {
         const t = new Tree;
     expect(t.isEmpty()).toBe(true);
@@ -123,3 +136,15 @@ test('detect other building has requirements', () => {
             .toEqual(data[i].res)
     }
 });
+
+test('only one item in the tree can have empty requirements', () => {
+    const t = new Tree;
+
+    let castle = new Building();
+    let house = new Building();
+
+    castle.define({ name: 'iron', amount: 10, });
+    house.define({ name: 'iron', amount: 10, });
+
+    t.addBuilding('castle', castle);
+})
