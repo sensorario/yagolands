@@ -23,6 +23,10 @@ class Game {
         return this.units.length;
     }
 
+    start() {
+        throw 'mannaggia'
+    }
+
 }
 
 module.exports = Game

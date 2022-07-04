@@ -22,3 +22,14 @@ test('game can start with building tree and units defined', () => {
     expect(game.numbweOfUnits()).toEqual(1);
 })
 
+test('game cant start without definition of building that unlock units', () => {
+    let tree = new Tree();
+    let castle = new Building();
+    let firstUnit = new Unit();
+
+    tree.addBuilding('castle', castle);
+    game.addBuildingTreeAndUnits(tree, [firstUnit]);
+
+    expect(function () { game.start() } ).toThrow('mannaggia');
+})
+
