@@ -87,6 +87,10 @@ class Tree {
         return requirements;
     }
 
+    numbweOfBuildings() {
+        return this.buildings.length;
+    }
+
 }
 
 module.exports = Tree

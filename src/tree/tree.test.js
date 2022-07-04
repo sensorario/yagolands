@@ -16,6 +16,7 @@ test('list all buildings inside the tree', () => {
     expect(t.listBuildings()).toEqual([{
         name: 'xxx'
     }]);
+    expect(t.numbweOfBuildings()).toEqual(1);
 });
 
 test('only first item in the tree must can have empty requirements', () => {
