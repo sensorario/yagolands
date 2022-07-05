@@ -91,6 +91,10 @@ class Tree {
         return this.buildings.length;
     }
 
+    buildingAt(index) {
+        return this.table[index].building;
+    }
+
 }
 
 module.exports = Tree

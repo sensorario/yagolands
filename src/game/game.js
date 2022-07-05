@@ -10,7 +10,6 @@ class Game {
     }
 
     addBuildingTreeAndUnits(tree, units) {
-        this.startable = true;
         this.tree = tree;
         this.units = units;
     }
@@ -25,6 +24,15 @@ class Game {
 
     start() {
         throw 'mannaggia'
+    }
+
+    grandUnitBuildiner(options) {
+        for (let i = 0; i < this.tree.numbweOfBuildings(); i++) {
+            const currentBuilding = this.tree.buildingAt(i);
+            if (currentBuilding === options.building) {
+            this.startable = true;
+            }
+        }
     }
 
 }
