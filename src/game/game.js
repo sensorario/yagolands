@@ -23,7 +23,9 @@ class Game {
     }
 
     start() {
-        throw 'mannaggia'
+        if (this.startable === false) {
+            throw 'mannaggia'
+        }
     }
 
     grandUnitBuildiner(options) {

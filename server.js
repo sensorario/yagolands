@@ -19,8 +19,17 @@ const firstUnit = new Unit();
 // configure the game
 tree.addBuilding('castle', castle);
 game.addBuildingTreeAndUnits(tree, [firstUnit]);
+game.grandUnitBuildiner({
+    building: 'castle',
+    level: 2,
+});
+
 function gameStarter(game) {
+    console.log('.');
     game.start();
+    setTimeout(() => {
+        gameStarter(game);
+    }, 1000);
 }
 gameStarter(game);
 

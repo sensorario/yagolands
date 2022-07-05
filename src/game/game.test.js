@@ -35,3 +35,7 @@ test('game cant start without definition of building that unlock units', () => {
     expect(game.canStart()).toBe(true);
 })
 
+test('game cant start without first demo user', () => {
+    // lan
+})
+
