@@ -32,10 +32,24 @@ test('game cant start without definition of building that unlock units', () => {
         level: 2,
     });
 
-    expect(game.canStart()).toBe(true);
+    expect(() => game.start()).toThrow('demo user is missing');
 })
 
 test('game cant start without first demo user', () => {
-    // lan
-})
+    let tree = new Tree();
+    let castle = new Building();
+    let firstUnit = new Unit();
 
+    tree.addBuilding('castle', castle);
+    game.addBuildingTreeAndUnits(tree, [firstUnit]);
+    game.grandUnitBuildiner({
+        building: 'castle',
+        level: 2,
+    });
+    game.addDemoUser({
+        username: 'sensorario',
+        password: 'password',
+    });
+
+    expect(game.canStart()).toBe(true);
+})

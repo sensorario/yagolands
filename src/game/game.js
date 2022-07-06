@@ -3,6 +3,7 @@ class Game {
     constructor() {
         this.startable = false;
         this.tree = [];
+        this.demoUser = null;
     }
 
     canStart() {
@@ -26,15 +27,23 @@ class Game {
         if (this.startable === false) {
             throw 'mannaggia'
         }
+
+        if (this.demoUser === null) {
+            throw 'demo user is missing';
+        }
     }
 
     grandUnitBuildiner(options) {
         for (let i = 0; i < this.tree.numbweOfBuildings(); i++) {
             const currentBuilding = this.tree.buildingAt(i);
             if (currentBuilding === options.building) {
-            this.startable = true;
+                this.startable = true;
             }
         }
+    }
+
+    addDemoUser(user) {
+        this.demoUser = user;
     }
 
 }
