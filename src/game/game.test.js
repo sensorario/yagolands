@@ -17,7 +17,7 @@ test('game cant start without definition of building that unlock units', () => {
     tree.addBuilding('castle', castle);
     game.addBuildingTreeAndUnits(tree, [firstUnit]);
 
-    expect(function () { game.start() } ).toThrow('mannaggia');
+    expect(() => game.start()).toThrow('mannaggia');
 })
 
 test('game cant start without definition of building that unlock units', () => {
