@@ -1,5 +1,4 @@
 // @todo extract validator for a message
-// @todo order items per scheduling time
 // @todo if queue is totally empty retrieve data from a provider
 
 class Queue {
@@ -22,6 +21,23 @@ class Queue {
         }
 
         this.items.push(message);
+    }
+
+    list() {
+        let ret = [];
+
+        this.items.sort((aa, bb) => {
+            return aa.scheduling - bb.scheduling;
+        });
+
+        for(let i = 0; i < this.items.length; i++) {
+            ret.push({
+                message: this.items[i].message,
+                type: this.items[i].type,
+            });
+        }
+
+        return ret;
     }
 
 }

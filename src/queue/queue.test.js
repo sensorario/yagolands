@@ -24,3 +24,27 @@ test('queue receive a message with instructions', () => {
     queue.send(message);
     expect(queue.isEmpty()).toEqual(false);
 })
+
+test.only('sort items per scheduling time', () => {
+    var present = new Date();
+    var future = new Date();
+    future.setMonth(future.getMonth() + 3);
+
+    queue.send({
+        type: 'building_instructions',
+        scheduling: future,
+        message: 'future',
+    });
+    queue.send({
+        type: 'building_instructions',
+        scheduling: present,
+        message: 'present',
+    });
+    expect(queue.list()).toEqual([{
+        type: 'building_instructions',
+        message: 'present',
+    }, {
+        type: 'building_instructions',
+        message: 'future',
+    }]);
+})
