@@ -12,6 +12,13 @@ test('queue message must contains type of message', () => {
 
 test('queue receive a message with instructions', () => {
     const message = {
+        type: 'wrong_type',
+    };
+    expect(() => queue.send(message)).toThrow('message type is invalid');
+})
+
+test('queue receive a message with instructions', () => {
+    const message = {
         type: 'building_instructions',
     };
     queue.send(message);
