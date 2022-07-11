@@ -11,9 +11,6 @@ function send (data) {
 
 connection.addEventListener('open', () => {
     console.log('connected');
-    send(JSON.stringify({
-        text: 'new client is connected'
-    }));
 })
 
 connection.addEventListener('message', e => {
@@ -34,3 +31,9 @@ msg.addEventListener('keydown', e => {
         to.value = '';
     }
 })
+
+setTimeout(() => {
+    send(JSON.stringify({
+        text: 'new client is connected'
+    }));
+}, 1000);
