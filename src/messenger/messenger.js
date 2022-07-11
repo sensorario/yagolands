@@ -19,7 +19,8 @@ exports.messenger = function (data) {
             console.log('message sent to the client', clients[i].id);
             newClients.push(clients[i])
         } else {
-            console.log('message not sent to the client', clients[i].id)
+            console.log('client', clients[i], 'lost');
+            console.log('message not sent to the client', clients[i].id);
         }
     }
 
