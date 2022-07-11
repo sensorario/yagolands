@@ -31,3 +31,9 @@ msg.addEventListener('keydown', e => {
         to.value = '';
     }
 })
+
+document.addEventListener("DOMContentLoaded", function() {
+    send(JSON.stringify({
+        text: 'client loaded',
+    }));
+});
