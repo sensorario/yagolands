@@ -32,3 +32,11 @@ msg.addEventListener('keydown', e => {
     }
 })
 
+function messaggio() {
+    send(JSON.stringify({
+        text: 'bottone',
+        to: 'all'
+    }));
+};
+
+setTimeout(() => { messaggio(); }, 500);

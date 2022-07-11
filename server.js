@@ -19,6 +19,10 @@ const firstUnit = new Unit();
 // configure the game
 tree.addBuilding('castle', castle);
 game.addBuildingTreeAndUnits(tree, [firstUnit]);
+game.addDemoUser({
+    username: 'user',
+    password: 'password',
+});
 game.grandUnitBuildiner({
     building: 'castle',
     level: 2,
