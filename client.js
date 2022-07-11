@@ -3,6 +3,9 @@ const connection = new WebSocket('ws://localhost:12345'),
 
 connection.addEventListener('open', () => {
     console.log('connected');
+    send(JSON.stringify({
+        text: 'new client is connected'
+    }));
 })
 
 function send (data) {
