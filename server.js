@@ -1,7 +1,7 @@
 const websocket = require('ws'),
     server = new websocket.Server({ port: 12345, }),
-    messenger = require('./messenger'),
     generator = require('./generator'),
+    messenger = require('./src/messenger/messenger'),
 
     // import game libraries
     Game = require('./src/game/game'),
