@@ -31,9 +31,3 @@ msg.addEventListener('keydown', e => {
         to.value = '';
     }
 })
-
-setTimeout(() => {
-    send(JSON.stringify({
-        text: 'new client is connected'
-    }));
-}, 1000);
