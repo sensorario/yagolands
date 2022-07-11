@@ -1,13 +1,6 @@
 const connection = new WebSocket('ws://localhost:12345'),
     msg = document.getElementById('msg');
 
-connection.addEventListener('open', () => {
-    console.log('connected');
-    send(JSON.stringify({
-        text: 'new client is connected'
-    }));
-})
-
 function send (data) {
     if (connection.readyState === WebSocket.OPEN) {
         connection.send(data);
@@ -15,6 +8,13 @@ function send (data) {
         console.error('not connected');
     }
 }
+
+connection.addEventListener('open', () => {
+    console.log('connected');
+    send(JSON.stringify({
+        text: 'new client is connected'
+    }));
+})
 
 connection.addEventListener('message', e => {
     let numberOfClients = JSON.parse(e.data).numberOfClients;
