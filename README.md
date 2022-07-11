@@ -18,7 +18,7 @@
 ```javascript
 const websocket = require('ws'),
     server = new websocket.Server({ port: 12345, }),
-    messenger = require('./node_modules/yagolands/messenger'),
+    messenger = require('./node_modules/yagolands/src/messenger/messenger'),
     generator = require('./node_modules/yagolands/generator'),
 
 // import game libraries
