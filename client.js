@@ -15,8 +15,11 @@ connection.addEventListener('open', () => {
 
 connection.addEventListener('message', e => {
     let numberOfClients = JSON.parse(e.data).numberOfClients;
-    let div = document.querySelector('.numberOfClients');
-    div.innerHTML = numberOfClients;
+    let numberOfVillages = JSON.parse(e.data).numberOfVillages;
+    let divOfClients = document.querySelector('.numberOfClients');
+    let divOfVillages = document.querySelector('.numberOfVillages');
+    divOfClients.innerHTML = numberOfClients;
+    divOfVillages.innerHTML = numberOfVillages;
 })
 
 msg.addEventListener('keydown', e => {

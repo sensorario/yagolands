@@ -8,3 +8,5 @@
  - add building to the building tree
  - extract building requirements
  - only first item in building tree can have empty requirements
+ - create village when new user is added
+ - display number of villages in example html

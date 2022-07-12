@@ -1,9 +1,12 @@
+const generator = require('./../../generator');
+
 class Game {
 
     constructor() {
         this.startable = false;
         this.tree = [];
         this.demoUser = null;
+        this.villages = [];
     }
 
     canStart() {
@@ -44,6 +47,15 @@ class Game {
 
     addDemoUser(user) {
         this.demoUser = user;
+    }
+
+    addVillage(owner, village) {
+        let yid = generator.generateID();
+        this.villages.push({ yid: yid, owner: owner, village: village });
+    }
+
+    numberOfVillages() {
+        return this.villages.length;agme
     }
 
 }

@@ -1,44 +1,56 @@
 const websocket = require('ws'),
     server = new websocket.Server({ port: 12345, }),
     generator = require('./generator'),
-    messenger = require('./src/messenger/messenger'),
 
     // import game libraries
     Game = require('./src/game/game'),
+    Messenger = require('./src/messenger/messenger'),
     Tree = require('./src/tree/tree'),
     Building = require('./src/building/building'),
-    Unit = require('./src/unit/unit')
+    Unit = require('./src/unit/unit'),
+    Village = require('./src/village/village')
 
+
+// globals
+let seconds = 0;
 
 // init game objects, ...
-const game = new Game();
-const tree = new Tree();
-const castle = new Building();
-const firstUnit = new Unit();
+let game = new Game();
+let messenger = new Messenger();
+let tree = new Tree();
+let castle = new Building();
+let firstUnit = new Unit();
 
-// configure the game
-tree.addBuilding('castle', castle);
-game.addBuildingTreeAndUnits(tree, [firstUnit]);
-game.addDemoUser({
-    username: 'user',
-    password: 'password',
-});
-game.grandUnitBuildiner({
-    building: 'castle',
-    level: 2,
-});
-
-function gameStarter(game) {
-    console.log('.');
-    game.start();
-    setTimeout(() => {
-        gameStarter(game);
-    }, 1000);
-}
-gameStarter(game);
-
+// websockets
 server.on('connection', ws => {
     messenger.addClient({ id: generator.generateID(), ws: ws });
     ws.on('message', data => { messenger.messenger(data) })
 })
 
+// configure the game
+tree.addBuilding('castle', castle);
+game.addBuildingTreeAndUnits(tree, [firstUnit]);
+
+// @todo make this operation atomic
+game.addDemoUser({ username: 'user', password: 'password', });
+game.addVillage('user', new Village('user', 'sensorario\'s village'));
+messenger.setState(game.numberOfVillages())
+
+// castle of level 2 unlock units
+game.grandUnitBuildiner({ building: 'castle', level: 2 });
+
+function gameStarter() {
+    console.log('seconds', seconds);
+    console.log('villages', game.numberOfVillages());
+    game.start();
+    setTimeout(() => {
+        seconds++;
+        gameStarter();
+        // @todo sometimes check that seconds passed are exacly seconds expected
+        // it is possibile that this 1000 become 1001 or 1002, ...
+        // store timestamp at the beginning and recalculate seconds passed from
+        // the beginning of the game
+    }, 1000);
+}
+
+gameStarter();
