@@ -1,8 +1,11 @@
 let clients = [];
 
+function displayClients() {
+    console.log('clients:', clients.length)
+}
+
 exports.addClient = function (client) {
     clients.push(client);
-    console.log('clients:', clients.length)
 }
 
 exports.messenger = function (data) {
@@ -26,6 +29,8 @@ exports.messenger = function (data) {
 
     clients = newClients
 
+    console.log('clients:', clients.length)
+
     for(let i = 0; i < clients.length; i++) {
         clients[i].ws.send(JSON.stringify({
             id: clients[i].id,
@@ -33,4 +38,6 @@ exports.messenger = function (data) {
             numberOfClients: clients.length,
         }))
     }
+
+    displayClients();
 }
