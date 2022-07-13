@@ -10,3 +10,4 @@
  - only first item in building tree can have empty requirements
  - create village when new user is added
  - display number of villages in example html
+ - display number of fields created

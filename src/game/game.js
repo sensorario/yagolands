@@ -7,6 +7,7 @@ class Game {
         this.tree = [];
         this.demoUser = null;
         this.villages = [];
+        this.fields = [];
     }
 
     canStart() {
@@ -52,10 +53,26 @@ class Game {
     addVillage(owner, village) {
         let yid = generator.generateID();
         this.villages.push({ yid: yid, owner: owner, village: village });
+        // generate fields
+        let resources = this.tree.buildings[0].building.res;
+        for (let i = 0; i < resources.length; i++) {
+            for (let i = 0; i < 3; i++) {
+                let field = {
+                    yid: generator.generateID(),
+                    village: yid,
+                    name: resources[i].name,
+                };
+                this.fields.push(field);
+            }
+        }
     }
 
     numberOfVillages() {
-        return this.villages.length;agme
+        return this.villages.length;
+    }
+
+    numberOfFields() {
+        return this.fields.length;
     }
 
 }

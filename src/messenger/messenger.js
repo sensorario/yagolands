@@ -3,6 +3,7 @@ class Messenger {
     constructor() {
         this.clients = [];
         this.numberOfVillages = 0;
+        this.numberOfFields = 0;
     }
 
     displayClients() {
@@ -44,15 +45,17 @@ class Messenger {
                 message: JSON.parse(data),
                 numberOfClients: this.clients.length,
                 numberOfVillages: this.numberOfVillages,
+                numberOfFields: this.numberOfFields,
             }))
         }
 
         this.displayClients();
     }
 
-    setState(n) {
-        this.numberOfVillages = n;
-        console.log('updated number of villages to', this.numberOfVillages);
+    // @todo rename it asap
+    setState(state) {
+        this.numberOfVillages = state.numberOfVillages;
+        this.numberOfFields = state.numberOfFields;
     }
 
     addClient(client) {
