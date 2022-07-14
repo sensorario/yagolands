@@ -6,6 +6,8 @@ class Building {
     }
 
     define(name, res) {
+        // @todo name must be a string
+        // @todo resources an array of resources
         this.name = name;
         this.res = res;
     }
