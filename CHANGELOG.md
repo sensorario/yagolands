@@ -11,3 +11,4 @@
  - create village when new user is added
  - display number of villages in example html
  - display number of fields created
+ - add clock component to convert seconds to hh:mm:ss format
