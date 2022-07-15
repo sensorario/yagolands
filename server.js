@@ -56,6 +56,7 @@ function gameStarter() {
     game.start();
     setTimeout(() => {
         seconds++;
+        messenger.updateSeconds(seconds);
         gameStarter();
         // @todo sometimes check that seconds passed are exacly seconds expected
         // it is possibile that this 1000 become 1001 or 1002, ...
