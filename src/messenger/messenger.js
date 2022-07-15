@@ -1,9 +1,13 @@
+const Clock = require('./../clock/clock')
+let clock = new Clock();
+
 class Messenger {
 
     constructor() {
         this.clients = [];
         this.numberOfVillages = 0;
         this.numberOfFields = 0;
+        this.seconds = 0;
     }
 
     displayClients() {
@@ -46,6 +50,7 @@ class Messenger {
                 numberOfClients: this.clients.length,
                 numberOfVillages: this.numberOfVillages,
                 numberOfFields: this.numberOfFields,
+                seconds: clock.time(this.seconds),
             }))
         }
 
@@ -60,6 +65,10 @@ class Messenger {
 
     addClient(client) {
         this.clients.push(client);
+    }
+
+    updateSeconds(seconds) {
+        this.seconds = seconds;
     }
 
 }
