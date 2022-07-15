@@ -12,3 +12,4 @@
  - display number of villages in example html
  - display number of fields created
  - add clock component to convert seconds to hh:mm:ss format
+ - display time passed from the beginning in the client
