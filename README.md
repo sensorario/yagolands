@@ -19,4 +19,4 @@
 
 ### Run example html cliend
 
-Open index.html file in your brower.
+ - php -S localhost:8888 -t .
