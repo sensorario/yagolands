@@ -51,6 +51,7 @@ class Messenger {
                 numberOfVillages: this.numberOfVillages,
                 numberOfFields: this.numberOfFields,
                 seconds: clock.time(this.seconds),
+                rawseconds: this.seconds,
             }))
         }
 
