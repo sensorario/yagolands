@@ -19,4 +19,6 @@
 
 ### Run example html cliend
 
- - php -S localhost:8888 -t .
+An example client is available in this repository:
+
+ - https://github.com/sensorario/yagolands-client
