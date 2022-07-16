@@ -26,7 +26,12 @@ class Tree {
             building: building,
         });
 
+
         let ultimateLevel = requestedLevel || 1;
+
+        if (typeof level === 'undefined') {
+            level = 0;
+        }
 
         this.table.push({
             identifier: name + '.' + level,
