@@ -44,15 +44,31 @@ class Messenger {
 
         for(let i = 0; i < this.clients.length; i++) {
             console.log('send');
-            this.clients[i].ws.send(JSON.stringify({
-                id: this.clients[i].id,
-                message: JSON.parse(data),
-                numberOfClients: this.clients.length,
-                numberOfVillages: this.numberOfVillages,
-                numberOfFields: this.numberOfFields,
-                seconds: clock.time(this.seconds),
-                rawseconds: this.seconds,
-            }))
+            if (JSON.parse(data).text === 'build_castello') {
+                // @todo contare i secondi
+                this.clients[i].ws.send(JSON.stringify({
+                    numberOfClients: this.clients.length,
+                    numberOfVillages: this.numberOfVillages,
+                    numberOfFields: this.numberOfFields,
+                    id: this.clients[i].id,
+                    type: 'build_castello',
+                    seconds: clock.time(this.seconds),
+                    rawseconds: this.seconds,
+                    secondiAllaFine: 42, // @todo cercare ... 
+                }));
+            }
+
+            if (JSON.parse(data).text === 'bottone') {
+                this.clients[i].ws.send(JSON.stringify({
+                    id: this.clients[i].id,
+                    message: JSON.parse(data),
+                    numberOfClients: this.clients.length,
+                    numberOfVillages: this.numberOfVillages,
+                    numberOfFields: this.numberOfFields,
+                    seconds: clock.time(this.seconds),
+                    rawseconds: this.seconds,
+                }))
+            }
         }
 
         this.displayClients();

@@ -31,7 +31,9 @@ castle.define('castle', [
 // websockets
 server.on('connection', ws => {
     messenger.addClient({ id: generator.generateID(), ws: ws });
-    ws.on('message', data => { messenger.messenger(data) })
+    ws.on('message', data => {
+        messenger.messenger(data);
+    });
 })
 
 // configure the game
@@ -51,17 +53,11 @@ messenger.setState({
 game.grandUnitBuildiner({ building: 'castle', level: 2 });
 
 function gameStarter() {
-    console.log('seconds', seconds);
-    console.log('villages', game.numberOfVillages());
     game.start();
     setTimeout(() => {
         seconds++;
         messenger.updateSeconds(seconds);
         gameStarter();
-        // @todo sometimes check that seconds passed are exacly seconds expected
-        // it is possibile that this 1000 become 1001 or 1002, ...
-        // store timestamp at the beginning and recalculate seconds passed from
-        // the beginning of the game
     }, 1000);
 }
 
