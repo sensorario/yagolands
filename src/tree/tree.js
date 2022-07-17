@@ -18,7 +18,7 @@ class Tree {
             : null;
 
         if (this.isEmpty() === false && requires === null) {
-            throw 'ma porc'
+            throw 'building ' + name + ' must have requirements'
         }
 
         this.buildings.push({
@@ -26,7 +26,12 @@ class Tree {
             building: building,
         });
 
+
         let ultimateLevel = requestedLevel || 1;
+
+        if (typeof level === 'undefined') {
+            level = 0;
+        }
 
         this.table.push({
             identifier: name + '.' + level,
@@ -40,7 +45,7 @@ class Tree {
         for(let i = 0; i < this.buildings.length; i++) {
             if (this.buildings[i].name === building) {
                 return {
-                    name: this.buildings[i].name
+                    resources: this.buildings[i].building.name
                 };
             }
         }
@@ -93,6 +98,10 @@ class Tree {
 
     buildingAt(index) {
         return this.table[index].building;
+    }
+
+    firstBuilding() {
+        return {[this.buildingAt(0)]: 1}
     }
 
 }

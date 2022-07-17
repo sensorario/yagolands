@@ -16,8 +16,8 @@ let seconds = 0;
 
 // init game objects, ...
 let game = new Game();
-let messenger = new Messenger();
 let tree = new Tree();
+let messenger = new Messenger(tree);
 let firstUnit = new Unit();
 
 let castle = new Building();
@@ -28,14 +28,26 @@ castle.define('castle', [
     {name: 'grain', amount: 34},
 ]);
 
+let warehouse = new Building();
+warehouse.define('warehouse', [
+    {name: 'iron', amount: 37},
+    {name: 'wood', amount: 38},
+    {name: 'clay', amount: 35},
+    {name: 'grain', amount: 36},
+]);
+
 // websockets
 server.on('connection', ws => {
     messenger.addClient({ id: generator.generateID(), ws: ws });
-    ws.on('message', data => { messenger.messenger(data) })
+    ws.on('message', data => {
+        messenger.messenger(data);
+    });
 })
 
-// configure the game
+// configure building Tree
 tree.addBuilding('castle', castle);
+tree.addBuilding('warehouse', warehouse, 1, 'castle', 1);
+
 game.addBuildingTreeAndUnits(tree, [firstUnit]);
 
 // @todo make this operation atomic
@@ -51,17 +63,11 @@ messenger.setState({
 game.grandUnitBuildiner({ building: 'castle', level: 2 });
 
 function gameStarter() {
-    console.log('seconds', seconds);
-    console.log('villages', game.numberOfVillages());
     game.start();
     setTimeout(() => {
         seconds++;
         messenger.updateSeconds(seconds);
         gameStarter();
-        // @todo sometimes check that seconds passed are exacly seconds expected
-        // it is possibile that this 1000 become 1001 or 1002, ...
-        // store timestamp at the beginning and recalculate seconds passed from
-        // the beginning of the game
     }, 1000);
 }
 
