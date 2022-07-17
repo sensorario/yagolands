@@ -45,7 +45,7 @@ class Tree {
         for(let i = 0; i < this.buildings.length; i++) {
             if (this.buildings[i].name === building) {
                 return {
-                    name: this.buildings[i].name
+                    resources: this.buildings[i].building.name
                 };
             }
         }
@@ -98,6 +98,10 @@ class Tree {
 
     buildingAt(index) {
         return this.table[index].building;
+    }
+
+    firstBuilding() {
+        return {[this.buildingAt(0)]: 1}
     }
 
 }

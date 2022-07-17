@@ -16,8 +16,8 @@ let seconds = 0;
 
 // init game objects, ...
 let game = new Game();
-let messenger = new Messenger();
 let tree = new Tree();
+let messenger = new Messenger(tree);
 let firstUnit = new Unit();
 
 let castle = new Building();

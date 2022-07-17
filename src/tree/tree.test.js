@@ -107,8 +107,19 @@ test('only one item in the tree can have empty requirements', () => {
     let castle = new Building();
     let house = new Building();
 
-    castle.define({ name: 'iron', amount: 10, });
+    castle.define([
+        { name: 'iron', amount: 10, },
+        { name: 'clay', amount: 11, },
+    ]);
     house.define({ name: 'iron', amount: 10, });
 
     t.addBuilding('castle', castle);
+
+    expect(t.firstBuilding()).toEqual({castle: 1});
+    expect(t.get('castle')).toEqual({
+       resources: [
+        { amount: 10, name: 'iron', },
+        { amount: 11, name: 'clay', },
+       ]
+    });
 })

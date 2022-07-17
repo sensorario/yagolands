@@ -3,11 +3,12 @@ let clock = new Clock();
 
 class Messenger {
 
-    constructor() {
+    constructor(tree) {
         this.clients = [];
         this.numberOfVillages = 0;
         this.numberOfFields = 0;
         this.seconds = 0;
+        this.tree = tree;
     }
 
     displayClients() {
@@ -43,7 +44,16 @@ class Messenger {
         console.log('clients:', this.clients.length)
 
         for(let i = 0; i < this.clients.length; i++) {
-            console.log('send');
+
+            // @todo ensure first building must be built
+            //let firstBuilding = this.tree.firstBuilding();
+            let secondsToBuild = 0;
+            for(let i = 0; i < this.tree.buildings[0].building.res.length; i++) {
+                secondsToBuild += this.tree.buildings[0].building.res[i].amount;
+            }
+
+            console.log('JSON.parse(data).text', JSON.parse(data).text)
+
             if (JSON.parse(data).text === 'build_castello') {
                 // @todo contare i secondi
                 this.clients[i].ws.send(JSON.stringify({
@@ -54,7 +64,7 @@ class Messenger {
                     type: 'build_castello',
                     seconds: clock.time(this.seconds),
                     rawseconds: this.seconds,
-                    secondiAllaFine: 42, // @todo cercare ... 
+                    secondiAllaFine: secondsToBuild, // @todo cercare ... 
                 }));
             }
 
