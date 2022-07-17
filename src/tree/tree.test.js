@@ -29,7 +29,7 @@ test('only first item in the tree must can have empty requirements', () => {
     t.addBuilding('xxx', builder);
     expect(function () {
         t.addBuilding('xxx', builder);
-    }).toThrow('ma porc')
+    }).toThrow('building xxx must have requirements')
 });
 
 test('start empty', () => {

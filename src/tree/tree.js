@@ -18,7 +18,7 @@ class Tree {
             : null;
 
         if (this.isEmpty() === false && requires === null) {
-            throw 'ma porc'
+            throw 'building ' + name + ' must have requirements'
         }
 
         this.buildings.push({

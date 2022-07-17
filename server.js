@@ -28,6 +28,14 @@ castle.define('castle', [
     {name: 'grain', amount: 34},
 ]);
 
+let warehouse = new Building();
+warehouse.define('warehouse', [
+    {name: 'iron', amount: 37},
+    {name: 'wood', amount: 38},
+    {name: 'clay', amount: 35},
+    {name: 'grain', amount: 36},
+]);
+
 // websockets
 server.on('connection', ws => {
     messenger.addClient({ id: generator.generateID(), ws: ws });
@@ -36,8 +44,10 @@ server.on('connection', ws => {
     });
 })
 
-// configure the game
+// configure building Tree
 tree.addBuilding('castle', castle);
+tree.addBuilding('warehouse', warehouse, 1, 'castle', 1);
+
 game.addBuildingTreeAndUnits(tree, [firstUnit]);
 
 // @todo make this operation atomic
