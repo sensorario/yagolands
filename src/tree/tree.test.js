@@ -6,12 +6,9 @@ const b = new Building;
 // ... Done is better than perfect
 
 test('list all buildings inside the tree', () => {
-        const t = new Tree;
+    const t = new Tree;
     builder = new Building()
-    builder.define({
-        name: 'iron',
-        amount: 10,
-    });
+    builder.define({ name: 'iron', amount: 10 });
     t.addBuilding('xxx', builder);
     expect(t.listBuildings()).toEqual([{
         name: 'xxx'
@@ -22,73 +19,46 @@ test('list all buildings inside the tree', () => {
 test('only first item in the tree must can have empty requirements', () => {
     const t = new Tree;
     builder = new Building()
-    builder.define({
-        name: 'iron',
-        amount: 10,
-    });
+    builder.define({ name: 'iron', amount: 10 });
     t.addBuilding('xxx', builder);
-    expect(function () {
-        t.addBuilding('xxx', builder);
-    }).toThrow('building xxx must have requirements')
+    expect(function () { t.addBuilding('xxx', builder); }).toThrow('building xxx must have requirements')
 });
 
 test('start empty', () => {
-        const t = new Tree;
+    const t = new Tree;
     expect(t.isEmpty()).toBe(true);
 });
 
 test('accept independent building', () => {
-        const t = new Tree;
+    const t = new Tree;
     builder = new Building();
-    builder.define({
-        name: 'iron',
-        amount: 10,
-    });
+    builder.define({ name: 'iron', amount: 10 });
     t.addBuilding('castle', builder);
     expect(t.isEmpty()).toBe(false);
 });
 
 test('extract one single building from the tree', () => {
-        const t = new Tree;
-    builder = new Building()
-    builder.define({
-        name: 'iron',
-        amount: 10,
-    });
-    t.addBuilding('xxx', builder);
-    expect(t.extractBuilding('xxx')).toEqual({
-        name: 'xxx'
-    });
-});
-
-test('extract lookup table', () => {
     const t = new Tree;
     builder = new Building()
-    builder.define({
-        name: 'iron',
-        amount: 10,
-    });
+    builder.define({ name: 'iron', amount: 10 });
+    t.addBuilding('xxx', builder);
+    expect(t.extractBuilding('xxx')).toEqual({ name: 'xxx' });
+});
+
+test('extract full lookup table from the building tree', () => {
+    const t = new Tree;
+    builder = new Building()
+    builder.define({ name: 'iron', amount: 10 });
     t.addBuilding('castle', builder, 1);
-    expect(t.lookupTable()).toEqual([{
-        identifier: 'castle.1',
-        building: 'castle',
-        level: 1,
-        requires: null 
-    }]);
+    expect(t.lookupTable()).toEqual([{ identifier: 'castle.1', building: 'castle', level: 1, requires: null }]);
 });
 
 test('detect first building has no requirements', () => {
     const t = new Tree;
     builder = new Building()
-    builder.define({
-        name: 'iron',
-        amount: 10,
-    });
+    builder.define({ name: 'iron', amount: 10 });
     t.addBuilding('castle', builder);
-    let req = {
-        requiredBuilding: 'castle',
-        requiredLevel: 1,
-    };
+    let req = { requiredBuilding: 'castle', requiredLevel: 1 };
     expect(t.needsRequirements(req)).toBe(false);
 });
 
@@ -116,20 +86,13 @@ test('detect other building has requirements', () => {
 
     let data = [{
         req: { requiredBuilding: 'stall', requiredLevel: 1 },
-        res: [
-            { requiredBuilding: 'windmill', requiredLevel: 1 },
-            { requiredBuilding: 'house', requiredLevel: 1 },
-        ],
+        res: [ { requiredBuilding: 'windmill', requiredLevel: 1 }, { requiredBuilding: 'house', requiredLevel: 1 } ],
     },{
         req: { requiredBuilding: 'windmill', requiredLevel: 1 },
-        res: [
-            { requiredBuilding: 'castle', requiredLevel: 1 },
-        ],
+        res: [ { requiredBuilding: 'castle', requiredLevel: 1 } ],
     },{
         req: { requiredBuilding: 'windmill', requiredLevel: 2 },
-        res: [
-            { requiredBuilding: 'castle', requiredLevel: 3 },
-        ],
+        res: [ { requiredBuilding: 'castle', requiredLevel: 3 } ],
     }];
 
     for(let i = 0; i < data.length; i++) {
