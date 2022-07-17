@@ -2,6 +2,8 @@
 
 ## v1.0 - (??/??/????)
 
+### Added
+
  - add changelog and readme file
  - add jest as test framework
  - add building and resources basic definition
