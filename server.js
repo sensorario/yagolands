@@ -22,18 +22,18 @@ let firstUnit = new Unit();
 
 let castle = new Building();
 castle.define('castle', [
-    {name: 'iron', amount: 16},
-    {name: 'wood', amount: 15},
-    {name: 'clay', amount: 14},
-    {name: 'grain', amount: 17},
+    {name: 'iron', amount: 6},
+    {name: 'wood', amount: 5},
+    {name: 'clay', amount: 4},
+    {name: 'grain', amount: 7},
 ]);
 
 let warehouse = new Building();
 warehouse.define('warehouse', [
-    {name: 'iron', amount: 37},
-    {name: 'wood', amount: 38},
-    {name: 'clay', amount: 35},
-    {name: 'grain', amount: 36},
+    {name: 'iron', amount: 7},
+    {name: 'wood', amount: 8},
+    {name: 'clay', amount: 5},
+    {name: 'grain', amount: 6},
 ]);
 
 // websockets

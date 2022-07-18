@@ -55,8 +55,14 @@ class Messenger {
 
             let adesso = Date.now();
             let now = new Date(adesso);
-            console.log(now);
-
+            let rawFinish = adesso + secondsToBuild * 1000;
+            let finish = new Date(rawFinish);
+            let queue = {
+                now: now,
+                rawNon: adesso,
+                finish: finish,
+                rawFinish: rawFinish, 
+            };
 
             console.log('JSON.parse(data).text', JSON.parse(data).text)
 
@@ -72,6 +78,7 @@ class Messenger {
                     rawseconds: this.seconds,
                     secondiAllaFine: secondsToBuild, // @todo cercare ... 
                     tree: this.tree,
+                    queue: queue,
                 }));
             }
 
@@ -84,6 +91,7 @@ class Messenger {
                 seconds: clock.time(this.seconds),
                 rawseconds: this.seconds,
                 tree: this.tree,
+                queue: queue,
             }))
         }
 
