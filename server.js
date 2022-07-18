@@ -21,20 +21,12 @@ let messenger = new Messenger(tree);
 let firstUnit = new Unit();
 
 let castle = new Building();
-castle.define('castle', [
-    {name: 'iron', amount: 6},
-    {name: 'wood', amount: 5},
-    {name: 'clay', amount: 4},
-    {name: 'grain', amount: 7},
-]);
-
 let warehouse = new Building();
-warehouse.define('warehouse', [
-    {name: 'iron', amount: 7},
-    {name: 'wood', amount: 8},
-    {name: 'clay', amount: 5},
-    {name: 'grain', amount: 6},
-]);
+let windmill = new Building();
+
+castle.define('castle', [ {name: 'iron', amount: 6}, {name: 'wood', amount: 5}, {name: 'clay', amount: 4}, {name: 'grain', amount: 7} ]);
+warehouse.define('warehouse', [ {name: 'iron', amount: 7}, {name: 'wood', amount: 8}, {name: 'clay', amount: 5}, {name: 'grain', amount: 6}, ]);
+windmill.define('windmill', [ {name: 'iron', amount: 8}, {name: 'wood', amount: 8}, {name: 'clay', amount: 6}, {name: 'grain', amount: 8}, ]);
 
 // websockets
 server.on('connection', ws => {
@@ -47,6 +39,9 @@ server.on('connection', ws => {
 // configure building Tree
 tree.addBuilding('castle', castle);
 tree.addBuilding('warehouse', warehouse, 1, 'castle', 1);
+tree.addBuilding('windmill', windmill, 1, 'castle', 1);
+tree.addBuilding('castle', castle, 1, 'windmill', 1);
+tree.addBuilding('castle', castle, 1, 'warehouse', 1);
 
 game.addBuildingTreeAndUnits(tree, [firstUnit]);
 

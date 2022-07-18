@@ -7,13 +7,21 @@ const b = new Building;
 
 test('list all buildings inside the tree', () => {
     const t = new Tree;
-    builder = new Building()
-    builder.define({ name: 'iron', amount: 10 });
-    t.addBuilding('xxx', builder);
-    expect(t.listBuildings()).toEqual([{
-        name: 'xxx'
-    }]);
+
+    xxx = new Building()
+    xxx.define({ name: 'iron', amount: 10 });
+    t.addBuilding('xxx', xxx);
+
+    expect(t.listBuildings()).toEqual([{ name: 'xxx' }]);
     expect(t.numbweOfBuildings()).toEqual(1);
+
+    yyy = new Building()
+    yyy.define({ name: 'iron', amount: 10 });
+    t.addBuilding('yyy', yyy, 1, 'xxx', 1);
+    t.addBuilding('xxx', xxx, 2, 'yyy', 1);
+
+    expect(t.listBuildings()).toEqual([{ name: 'xxx' }, {name: 'yyy'}]);
+    expect(t.numbweOfBuildings()).toEqual(2);
 });
 
 test('only first item in the tree must can have empty requirements', () => {

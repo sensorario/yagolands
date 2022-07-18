@@ -53,13 +53,20 @@ class Tree {
 
     listBuildings() {
         let list = [];
+
         for(let i = 0; i < this.buildings.length; i++) {
-            list.push({
-                name: this.buildings[i].name
-            });
+            if (!list.includes(this.buildings[i].name)) {
+                list.push(this.buildings[i].name);
+            }
         }
 
-        return list;
+        let ultimate = [];
+
+        for(let i = 0; i < list.length; i++) {
+            ultimate.push({ name: list[i] });
+        }
+
+        return ultimate;
     }
 
     extractBuilding(buildingName) {
@@ -93,7 +100,7 @@ class Tree {
     }
 
     numbweOfBuildings() {
-        return this.buildings.length;
+        return this.listBuildings().length;
     }
 
     buildingAt(index) {

@@ -17,3 +17,4 @@
  - display time passed from the beginning in the client
  - remove client from this repository
  - server send tree data to the client
+ - provide distinct list of buildings inserted in the tree
