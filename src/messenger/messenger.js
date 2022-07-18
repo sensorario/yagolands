@@ -52,6 +52,12 @@ class Messenger {
                 secondsToBuild += this.tree.buildings[0].building.res[i].amount;
             }
 
+
+            let adesso = Date.now();
+            let now = new Date(adesso);
+            console.log(now);
+
+
             console.log('JSON.parse(data).text', JSON.parse(data).text)
 
             if (JSON.parse(data).text === 'build_castello') {
@@ -65,6 +71,7 @@ class Messenger {
                     seconds: clock.time(this.seconds),
                     rawseconds: this.seconds,
                     secondiAllaFine: secondsToBuild, // @todo cercare ... 
+                    tree: this.tree,
                 }));
             }
 
@@ -76,6 +83,7 @@ class Messenger {
                 numberOfFields: this.numberOfFields,
                 seconds: clock.time(this.seconds),
                 rawseconds: this.seconds,
+                tree: this.tree,
             }))
         }
 

@@ -22,10 +22,10 @@ let firstUnit = new Unit();
 
 let castle = new Building();
 castle.define('castle', [
-    {name: 'iron', amount: 32},
-    {name: 'wood', amount: 33},
-    {name: 'clay', amount: 31},
-    {name: 'grain', amount: 34},
+    {name: 'iron', amount: 16},
+    {name: 'wood', amount: 15},
+    {name: 'clay', amount: 14},
+    {name: 'grain', amount: 17},
 ]);
 
 let warehouse = new Building();
