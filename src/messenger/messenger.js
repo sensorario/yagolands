@@ -48,10 +48,17 @@ class Messenger {
             // @todo ensure first building must be built
             //let firstBuilding = this.tree.firstBuilding();
             let secondsToBuild = 0;
-            for(let i = 0; i < this.tree.buildings[0].building.res.length; i++) {
-                secondsToBuild += this.tree.buildings[0].building.res[i].amount;
+            let mappa = [];
+            mappa['build_castle'] = 0;
+            mappa['build_windmill'] = 1;
+            mappa['build_warehouse'] = 2;
+            if (typeof mappa[JSON.parse(data).text] !== 'undefined') {
+                let indice = mappa[JSON.parse(data).text];
+                console.log('indice', indice);
+                for(let i = 0; i < this.tree.buildings[indice].building.res.length; i++) {
+                    secondsToBuild += this.tree.buildings[indice].building.res[i].amount;
+                }
             }
-
 
             let adesso = Date.now();
             let now = new Date(adesso);
@@ -66,32 +73,43 @@ class Messenger {
 
             console.log('JSON.parse(data).text', JSON.parse(data).text)
 
-            if (JSON.parse(data).text === 'build_castello') {
+            let available = [];
+            available.push('build_castle');
+            available.push('build_windmill');
+            available.push('build_warehouse');
+            if (available.includes(JSON.parse(data).text)) {
+                console.log('calcolo')
                 // @todo contare i secondi
                 this.clients[i].ws.send(JSON.stringify({
-                    numberOfClients: this.clients.length,
-                    numberOfVillages: this.numberOfVillages,
-                    numberOfFields: this.numberOfFields,
+                    buildings: this.tree.listBuildings(),
                     id: this.clients[i].id,
-                    type: 'build_castello',
-                    seconds: clock.time(this.seconds),
-                    rawseconds: this.seconds,
-                    secondiAllaFine: secondsToBuild, // @todo cercare ... 
-                    tree: this.tree,
+                    numberOfClients: this.clients.length,
+                    numberOfFields: this.numberOfFields,
+                    numberOfVillages: this.numberOfVillages,
                     queue: queue,
+                    rawseconds: this.seconds,
+                    rawFinish: rawFinish,
+                    secondiAllaFine: secondsToBuild,
+                    seconds: clock.time(this.seconds),
+                    tree: this.tree,
+                    type: JSON.parse(data).text,
                 }));
+            } else {
+                console.log(available, 'does not contains', JSON.parse(data).text)
             }
 
             this.clients[i].ws.send(JSON.stringify({
+                buildings: this.tree.listBuildings(),
                 id: this.clients[i].id,
                 message: JSON.parse(data),
                 numberOfClients: this.clients.length,
-                numberOfVillages: this.numberOfVillages,
                 numberOfFields: this.numberOfFields,
-                seconds: clock.time(this.seconds),
-                rawseconds: this.seconds,
-                tree: this.tree,
+                numberOfVillages: this.numberOfVillages,
                 queue: queue,
+                rawseconds: this.seconds,
+                secondiAllaFine: secondsToBuild, // @todo cercare ... 
+                seconds: clock.time(this.seconds),
+                tree: this.tree,
             }))
         }
 

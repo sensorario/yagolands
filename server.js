@@ -24,9 +24,9 @@ let castle = new Building();
 let warehouse = new Building();
 let windmill = new Building();
 
-castle.define('castle', [ {name: 'iron', amount: 6}, {name: 'wood', amount: 5}, {name: 'clay', amount: 4}, {name: 'grain', amount: 7} ]);
+castle.define('castle', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 2}, {name: 'clay', amount: 1}, {name: 'grain', amount: 1} ]);
 warehouse.define('warehouse', [ {name: 'iron', amount: 7}, {name: 'wood', amount: 8}, {name: 'clay', amount: 5}, {name: 'grain', amount: 6}, ]);
-windmill.define('windmill', [ {name: 'iron', amount: 8}, {name: 'wood', amount: 8}, {name: 'clay', amount: 6}, {name: 'grain', amount: 8}, ]);
+windmill.define('windmill', [ {name: 'iron', amount: 8}, {name: 'wood', amount: 8}, {name: 'clay', amount: 15}, {name: 'grain', amount: 12}, ]);
 
 // websockets
 server.on('connection', ws => {
