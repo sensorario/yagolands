@@ -3,12 +3,13 @@ let clock = new Clock();
 
 class Messenger {
 
-    constructor(tree) {
+    constructor(tree, gameStatus) {
         this.clients = [];
         this.numberOfVillages = 0;
         this.numberOfFields = 0;
         this.seconds = 0;
         this.tree = tree;
+        this.gameStatus = gameStatus;
     }
 
     displayClients() {
@@ -41,17 +42,35 @@ class Messenger {
 
         this.clients = newClients
 
-        console.log('clients:', this.clients.length)
+        let mappa = [];
+        mappa['build_castle'] = 0;
+        mappa['build_windmill'] = 1;
+        mappa['build_warehouse'] = 2;
 
         for(let i = 0; i < this.clients.length; i++) {
+
+            // @todo recueprare la coda da un layer di persistenza
+            if (typeof this.gameStatus['user_' + this.clients[i].id] === 'undefined') {
+                this.gameStatus['user_' + this.clients[i].id] = {
+                    queue: [],
+                };
+            }
+
+
+
+
+            // data una certa ed un certo albero, ...
+            // verificare se l-edificio che si vuole costruire si trova nell=al;bero
+            // se ha dei requirements
+            // e cosi via
+            // in base all-albero ed in base alla richiesta di costruzione fatta, .. capisco se l-azione richiesta [ consentita oppure no
+
+
+
 
             // @todo ensure first building must be built
             //let firstBuilding = this.tree.firstBuilding();
             let secondsToBuild = 0;
-            let mappa = [];
-            mappa['build_castle'] = 0;
-            mappa['build_windmill'] = 1;
-            mappa['build_warehouse'] = 2;
             if (typeof mappa[JSON.parse(data).text] !== 'undefined') {
                 let indice = mappa[JSON.parse(data).text];
                 console.log('indice', indice);
@@ -78,8 +97,6 @@ class Messenger {
             available.push('build_windmill');
             available.push('build_warehouse');
             if (available.includes(JSON.parse(data).text)) {
-                console.log('calcolo')
-                // @todo contare i secondi
                 this.clients[i].ws.send(JSON.stringify({
                     buildings: this.tree.listBuildings(),
                     id: this.clients[i].id,
@@ -94,9 +111,20 @@ class Messenger {
                     tree: this.tree,
                     type: JSON.parse(data).text,
                 }));
+
+                let now = Date.now();
+                this.gameStatus['user_' + this.clients[i].id].queue.push({
+                    user: 'user_' + this.clients[i].id,
+                    action: JSON.parse(data).text,
+                    start: now,
+                    end: now + (secondsToBuild * 1000),
+                    level: 1,
+                });
             } else {
                 console.log(available, 'does not contains', JSON.parse(data).text)
             }
+
+            console.log('tante care cose', this.gameStatus['user_' + this.clients[i].id]);
 
             this.clients[i].ws.send(JSON.stringify({
                 buildings: this.tree.listBuildings(),

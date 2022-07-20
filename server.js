@@ -13,11 +13,12 @@ const websocket = require('ws'),
 
 // globals
 let seconds = 0;
+let gameStatus = {};
 
 // init game objects, ...
 let game = new Game();
 let tree = new Tree();
-let messenger = new Messenger(tree);
+let messenger = new Messenger(tree, gameStatus);
 let firstUnit = new Unit();
 
 let castle = new Building();
