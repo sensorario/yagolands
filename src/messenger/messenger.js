@@ -96,6 +96,9 @@ class Messenger {
             available.push('build_castle');
             available.push('build_windmill');
             available.push('build_warehouse');
+
+            console.log('tante care cose', this.gameStatus['user_' + this.clients[i].id]);
+
             if (available.includes(JSON.parse(data).text)) {
                 this.clients[i].ws.send(JSON.stringify({
                     buildings: this.tree.listBuildings(),
@@ -124,7 +127,6 @@ class Messenger {
                 console.log(available, 'does not contains', JSON.parse(data).text)
             }
 
-            console.log('tante care cose', this.gameStatus['user_' + this.clients[i].id]);
 
             this.clients[i].ws.send(JSON.stringify({
                 buildings: this.tree.listBuildings(),
