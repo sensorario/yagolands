@@ -111,6 +111,21 @@ class Tree {
         return {[this.buildingAt(0)]: 1}
     }
 
+    createMap() {
+        let map = [];
+        for(let t = 0; t < this.table.length; t++) {
+            let item = { name: this.table[t].building, level: this.table[t].level };
+            if (this.table[t].requires != null) {
+                item.required = {
+                    name: this.table[t].requires.requiredBuilding,
+                    level: this.table[t].requires.requiredLevel,
+                };
+            }
+            map.push(item);
+        }
+        return map;
+    }
+
 }
 
 module.exports = Tree

@@ -10,6 +10,7 @@ class Messenger {
         this.seconds = 0;
         this.tree = tree;
         this.gameStatus = gameStatus;
+        this.wall = null;
     }
 
     displayClients() {
@@ -97,36 +98,52 @@ class Messenger {
             available.push('build_windmill');
             available.push('build_warehouse');
 
-            console.log('tante care cose', this.gameStatus['user_' + this.clients[i].id]);
-
-            if (available.includes(JSON.parse(data).text)) {
-                this.clients[i].ws.send(JSON.stringify({
-                    buildings: this.tree.listBuildings(),
-                    id: this.clients[i].id,
-                    numberOfClients: this.clients.length,
-                    numberOfFields: this.numberOfFields,
-                    numberOfVillages: this.numberOfVillages,
-                    queue: queue,
-                    rawseconds: this.seconds,
-                    rawFinish: rawFinish,
-                    secondiAllaFine: secondsToBuild,
-                    seconds: clock.time(this.seconds),
-                    tree: this.tree,
-                    type: JSON.parse(data).text,
-                }));
-
-                let now = Date.now();
-                this.gameStatus['user_' + this.clients[i].id].queue.push({
-                    user: 'user_' + this.clients[i].id,
-                    action: JSON.parse(data).text,
-                    start: now,
-                    end: now + (secondsToBuild * 1000),
-                    level: 1,
-                });
-            } else {
-                console.log(available, 'does not contains', JSON.parse(data).text)
+            console.log('come vanno le cose', this.gameStatus['user_' + this.clients[i].id]);
+            console.log(this.wall.showQueue());
+            if (this.wall === null) {
+                throw 'wall is not yet defined'
             }
 
+            console.log('')
+            console.log( '@@@@')
+            console.log( 'posso costruire')
+            console.log(this.wall.canBuild(JSON.parse(data).text.replace('build_', '')))
+            console.log(JSON.parse(data).text.replace('build_', ''));
+            console.log( '@@@@')
+            console.log('')
+
+            if (this.wall.canBuild(JSON.parse(data).text.replace('build_', '')) === true) {
+                if (available.includes(JSON.parse(data).text)) {
+                    this.wall.addToQueue({ name: JSON.parse(data).text.replace('build_', ''), level: 1 })
+                    this.clients[i].ws.send(JSON.stringify({
+                        buildings: this.tree.listBuildings(),
+                        id: this.clients[i].id,
+                        numberOfClients: this.clients.length,
+                        numberOfFields: this.numberOfFields,
+                        numberOfVillages: this.numberOfVillages,
+                        queue: queue,
+                        rawseconds: this.seconds,
+                        rawFinish: rawFinish,
+                        secondiAllaFine: secondsToBuild,
+                        seconds: clock.time(this.seconds),
+                        tree: this.tree,
+                        type: JSON.parse(data).text,
+                    }));
+
+                    let now = Date.now();
+                    this.gameStatus['user_' + this.clients[i].id].queue.push({
+                        user: 'user_' + this.clients[i].id,
+                        action: JSON.parse(data).text,
+                        start: now,
+                        end: now + (secondsToBuild * 1000),
+                        level: 1,
+                    });
+                } else {
+                    console.log(available, 'does not contains', JSON.parse(data).text)
+                }
+            } else {
+                console.error('cant build', JSON.parse(data).text.replace('build_', ''));
+            }
 
             this.clients[i].ws.send(JSON.stringify({
                 buildings: this.tree.listBuildings(),
@@ -158,6 +175,10 @@ class Messenger {
 
     updateSeconds(seconds) {
         this.seconds = seconds;
+    }
+
+    setWall(wall) {
+        this.wall = wall
     }
 
 }

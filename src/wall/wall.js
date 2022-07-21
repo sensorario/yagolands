@@ -41,14 +41,8 @@ class Wall {
                 return false;
             }
         }
-
-        for (let q = 0; q < this.queue.length; q++) {
-            if (this.queue[q].name == buildingName) {
-                return false;
-            }
-        }
     
-        return availability;
+        return false;
     }
 
     requirementOf(buildingName) {
@@ -62,6 +56,8 @@ class Wall {
     addToQueue(b) {
         this.queue.push(b);
     }
+
+    showQueue() { return this.queue }
 
 }
 

@@ -131,3 +131,21 @@ test('only one item in the tree can have empty requirements', () => {
        ]
     });
 })
+
+test('create a map', () => {
+    const t = new Tree;
+
+    let castle = new Building();
+    let house = new Building();
+
+    castle.define([ { name: 'iron', amount: 10, }, { name: 'clay', amount: 11 } ]);
+    house.define([ { name: 'iron', amount: 9, }, { name: 'clay', amount: 9 } ]);
+
+    t.addBuilding('castle', castle);
+    t.addBuilding('house', house, 1, 'castle', 1);
+
+    expect(t.createMap()).toEqual([
+        { name: 'castle', level: 1 },
+        { name: 'house', level: 1, required: { name: 'castle', level: 1 } },
+    ]);
+})

@@ -9,6 +9,7 @@ const websocket = require('ws'),
     Building = require('./src/building/building'),
     Unit = require('./src/unit/unit'),
     Village = require('./src/village/village')
+    Wall = require('./src/wall/wall')
 
 
 // globals
@@ -20,6 +21,7 @@ let game = new Game();
 let tree = new Tree();
 let messenger = new Messenger(tree, gameStatus);
 let firstUnit = new Unit();
+let wall = new Wall();
 
 let castle = new Building();
 let warehouse = new Building();
@@ -44,12 +46,22 @@ tree.addBuilding('windmill', windmill, 1, 'castle', 1);
 tree.addBuilding('castle', castle, 1, 'windmill', 1);
 tree.addBuilding('castle', castle, 1, 'warehouse', 1);
 
+//{ name: 'castle', level: 1 },
+//{ name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+//{ name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+//{ name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+//{ name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+
+let mappone = tree.createMap();
+wall.treeBuilding(mappone);
+
 game.addBuildingTreeAndUnits(tree, [firstUnit]);
 
 // @todo make this operation atomic
 game.addDemoUser({ username: 'user', password: 'password', });
 game.addVillage('user', new Village('user', 'sensorario\'s village'));
 
+messenger.setWall(wall);
 messenger.setState({
     numberOfVillages: game.numberOfVillages(),
     numberOfFields: game.numberOfFields(),
