@@ -38,4 +38,20 @@ test(`list of available actions`, () => {
     ]);
     wall.addToQueue({ name: 'castle', level: 1 });
     expect(wall.canBuild('castle')).toEqual(false)
+    expect(wall.getRequirementsOf('warehouse', 1)).toEqual({ name: 'castle', level: 1 })
+    expect(wall.isRequirementPresent({ name: 'castle', level: 1 })).toEqual(true)
+    expect(wall.canBuild('warehouse', 1)).toEqual(true)
+})
+
+test(`list of available actions`, () => {
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    wall.addToQueue({ name: 'castle', level: 1 });
+    wall.addToQueue({ name: 'warehouse', level: 1 });
+    expect(wall.canBuild('warehouse', 1)).toEqual(false)
 })
