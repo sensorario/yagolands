@@ -24,7 +24,9 @@ class Wall {
             if (this.tree[t].name == buildingName && this.tree[t].level == 1) {
                 availability = this.tree[t];
                 if (typeof this.tree[t].required === 'undefined') {
-                    return true;
+                    if (this.queue.length === 0) {
+                        return true;
+                    }
                 }
                 required = this.tree[t].required;
             }
@@ -32,6 +34,12 @@ class Wall {
 
         if (required !== null) {
             if (this.queue.length === 0) {
+                return false;
+            }
+        }
+
+        for (let q = 0; q < this.queue.length; q++) {
+            if (this.queue[q].name == buildingName) {
                 return false;
             }
         }
@@ -44,6 +52,9 @@ class Wall {
                 return this.tree[t].required;
             }
         }
+    }
+    addToQueue(b) {
+        this.queue.push(b);
     }
 }
 
