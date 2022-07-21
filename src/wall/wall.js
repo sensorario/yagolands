@@ -1,12 +1,15 @@
 class Wall {
+
     constructor() {
         this.tree = [];
         this.buildingActions = [];
         this.queue = [];
     }
+
     treeBuilding(tree) {
         this.tree = tree;
     }
+
     actions() {
         for (let t = 0; t < this.tree.length; t++) {
             let buildingAction = 'build_' + this.tree[t].name;
@@ -16,6 +19,7 @@ class Wall {
         }
         return this.buildingActions;
     }
+
     canBuild(buildingName) {
         let availability = false;
         let required = null;
@@ -46,6 +50,7 @@ class Wall {
     
         return availability;
     }
+
     requirementOf(buildingName) {
         for (let t = 0; t < this.tree.length; t++) {
             if (this.tree[t].name == buildingName) {
@@ -53,9 +58,11 @@ class Wall {
             }
         }
     }
+
     addToQueue(b) {
         this.queue.push(b);
     }
+
 }
 
 module.exports = Wall;
