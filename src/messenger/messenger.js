@@ -43,6 +43,7 @@ class Messenger {
 
         this.clients = newClients
 
+        // @todo use this.wall.actions instead
         let mappa = [];
         mappa['build_castle'] = 0;
         mappa['build_windmill'] = 1;
@@ -56,18 +57,6 @@ class Messenger {
                     queue: [],
                 };
             }
-
-
-
-
-            // data una certa ed un certo albero, ...
-            // verificare se l-edificio che si vuole costruire si trova nell=al;bero
-            // se ha dei requirements
-            // e cosi via
-            // in base all-albero ed in base alla richiesta di costruzione fatta, .. capisco se l-azione richiesta [ consentita oppure no
-
-
-
 
             // @todo ensure first building must be built
             //let firstBuilding = this.tree.firstBuilding();
@@ -93,6 +82,7 @@ class Messenger {
 
             console.log('JSON.parse(data).text', JSON.parse(data).text)
 
+            // @todo use this.wall.actions() instead
             let available = [];
             available.push('build_castle');
             available.push('build_windmill');
@@ -103,14 +93,6 @@ class Messenger {
             if (this.wall === null) {
                 throw 'wall is not yet defined'
             }
-
-            console.log('')
-            console.log( '@@@@')
-            console.log( 'posso costruire')
-            console.log(this.wall.canBuild(JSON.parse(data).text.replace('build_', '')))
-            console.log(JSON.parse(data).text.replace('build_', ''));
-            console.log( '@@@@')
-            console.log('')
 
             if (this.wall.canBuild(JSON.parse(data).text.replace('build_', '')) === true) {
                 if (available.includes(JSON.parse(data).text)) {

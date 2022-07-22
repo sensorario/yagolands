@@ -95,6 +95,16 @@ class Wall {
             }
         }
     }
+
+    extractNextLevelOf(buildingName) {
+        let levelFound = 0;
+        for (let t = 0; t < this.queue.length; t++) {
+            if (this.queue[t].name == buildingName) {
+                levelFound = this.queue[t].level;
+            }
+        }
+        return levelFound + 1;
+    }
 }
 
 module.exports = Wall;
