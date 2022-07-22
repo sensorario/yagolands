@@ -27,16 +27,14 @@ class Tree {
         });
 
 
-        let ultimateLevel = requestedLevel || 1;
-
         if (typeof level === 'undefined') {
-            level = 0;
+            throw 'undefined level'
         }
 
         this.table.push({
             identifier: name + '.' + level,
             building: name,
-            level: ultimateLevel,
+            level: level,
             requires: requires,
         });
     }
@@ -53,13 +51,20 @@ class Tree {
 
     listBuildings() {
         let list = [];
+
         for(let i = 0; i < this.buildings.length; i++) {
-            list.push({
-                name: this.buildings[i].name
-            });
+            if (!list.includes(this.buildings[i].name)) {
+                list.push(this.buildings[i].name);
+            }
         }
 
-        return list;
+        let ultimate = [];
+
+        for(let i = 0; i < list.length; i++) {
+            ultimate.push({ name: list[i] });
+        }
+
+        return ultimate;
     }
 
     extractBuilding(buildingName) {
@@ -93,7 +98,7 @@ class Tree {
     }
 
     numbweOfBuildings() {
-        return this.buildings.length;
+        return this.listBuildings().length;
     }
 
     buildingAt(index) {
@@ -102,6 +107,21 @@ class Tree {
 
     firstBuilding() {
         return {[this.buildingAt(0)]: 1}
+    }
+
+    createMap() {
+        let map = [];
+        for(let t = 0; t < this.table.length; t++) {
+            let item = { name: this.table[t].building, level: this.table[t].level };
+            if (this.table[t].requires != null) {
+                item.required = {
+                    name: this.table[t].requires.requiredBuilding,
+                    level: this.table[t].requires.requiredLevel,
+                };
+            }
+            map.push(item);
+        }
+        return map;
     }
 
 }

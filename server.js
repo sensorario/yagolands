@@ -9,32 +9,29 @@ const websocket = require('ws'),
     Building = require('./src/building/building'),
     Unit = require('./src/unit/unit'),
     Village = require('./src/village/village')
+    Wall = require('./src/wall/wall')
 
 
 // globals
 let seconds = 0;
+let gameStatus = {};
 
 // init game objects, ...
 let game = new Game();
 let tree = new Tree();
-let messenger = new Messenger(tree);
+let messenger = new Messenger(tree, gameStatus);
 let firstUnit = new Unit();
+let wall = new Wall();
 
 let castle = new Building();
-castle.define('castle', [
-    {name: 'iron', amount: 6},
-    {name: 'wood', amount: 5},
-    {name: 'clay', amount: 4},
-    {name: 'grain', amount: 7},
-]);
-
 let warehouse = new Building();
-warehouse.define('warehouse', [
-    {name: 'iron', amount: 7},
-    {name: 'wood', amount: 8},
-    {name: 'clay', amount: 5},
-    {name: 'grain', amount: 6},
-]);
+let windmill = new Building();
+let barracks = new Building();
+
+castle.define('castle', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0} ]);
+warehouse.define('warehouse', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
+windmill.define('windmill', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
+barracks.define('barracks', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
 
 // websockets
 server.on('connection', ws => {
@@ -45,8 +42,16 @@ server.on('connection', ws => {
 })
 
 // configure building Tree
-tree.addBuilding('castle', castle);
+tree.addBuilding('castle', castle, 1);
 tree.addBuilding('warehouse', warehouse, 1, 'castle', 1);
+tree.addBuilding('windmill', windmill, 1, 'castle', 1);
+tree.addBuilding('castle', castle, 2, 'windmill', 1);
+tree.addBuilding('castle', castle, 2, 'warehouse', 1);
+tree.addBuilding('barracks', barracks, 1, 'castle', 2);
+
+let mappone = tree.createMap();
+console.log(mappone);
+wall.treeBuilding(mappone);
 
 game.addBuildingTreeAndUnits(tree, [firstUnit]);
 
@@ -54,6 +59,7 @@ game.addBuildingTreeAndUnits(tree, [firstUnit]);
 game.addDemoUser({ username: 'user', password: 'password', });
 game.addVillage('user', new Village('user', 'sensorario\'s village'));
 
+messenger.setWall(wall);
 messenger.setState({
     numberOfVillages: game.numberOfVillages(),
     numberOfFields: game.numberOfFields(),

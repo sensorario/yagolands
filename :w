@@ -1,0 +1,21 @@
+const Wall = require('./wall')
+
+test(`list of available actions`, () => {
+    well.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    expect(well.actions()).toEqual([
+        'build_castle',
+        'build_windmill',
+        'build_warehouse',
+    ])
+})
+
+test(`deny building that is not present in the tree`, () => { })
+test(`allow building whenever present in the tree`, () => { })
+test(`first allowing is available building at level 1`, () => { })
+test(`allow next level of an already built building`, () => { })

@@ -15,7 +15,7 @@ test('game cant start without definition of building that unlock units', () => {
     let castle = new Building();
     let firstUnit = new Unit();
 
-    tree.addBuilding('castle', castle);
+    tree.addBuilding('castle', castle, 1);
     game.addBuildingTreeAndUnits(tree, [firstUnit]);
 
     expect(() => game.start()).toThrow('mannaggia');
@@ -26,7 +26,7 @@ test('game cant start without definition of building that unlock units', () => {
     let castle = new Building();
     let firstUnit = new Unit();
 
-    tree.addBuilding('castle', castle);
+    tree.addBuilding('castle', castle, 1);
     game.addBuildingTreeAndUnits(tree, [firstUnit]);
     game.grandUnitBuildiner({
         building: 'castle',
@@ -41,7 +41,7 @@ test('game cant start without first demo user', () => {
     let castle = new Building();
     let firstUnit = new Unit();
 
-    tree.addBuilding('castle', castle);
+    tree.addBuilding('castle', castle, 1);
     game.addBuildingTreeAndUnits(tree, [firstUnit]);
     game.grandUnitBuildiner({
         building: 'castle',
@@ -60,7 +60,7 @@ test('game add village after user creation', () => {
     let castle = new Building();
     let firstUnit = new Unit();
 
-    tree.addBuilding('castle', castle);
+    tree.addBuilding('castle', castle, 1);
     game.addBuildingTreeAndUnits(tree, [firstUnit]);
     game.grandUnitBuildiner({
         building: 'castle',
