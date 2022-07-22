@@ -22,7 +22,7 @@ class Wall {
 
     canBuild(buildingName, level) {
         if (typeof level == 'undefined') {
-            level = 1;
+            throw 'level is missing in canBuild(buildingName, level)';
         }
 
         // if item is already in the queue, ... return false
