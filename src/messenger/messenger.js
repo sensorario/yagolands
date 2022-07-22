@@ -13,10 +13,6 @@ class Messenger {
         this.wall = null;
     }
 
-    displayClients() {
-        console.log('clients:', this.clients.length)
-    }
-
     messenger (data) {
         let message = JSON.parse(data);
         if (message.to === '') { message.to = 'all' }
@@ -63,7 +59,6 @@ class Messenger {
             let secondsToBuild = 0;
             if (typeof mappa[JSON.parse(data).text] !== 'undefined') {
                 let indice = mappa[JSON.parse(data).text];
-                console.log('indice', indice);
                 for(let i = 0; i < this.tree.buildings[indice].building.res.length; i++) {
                     secondsToBuild += this.tree.buildings[indice].building.res[i].amount;
                 }
@@ -80,51 +75,64 @@ class Messenger {
                 rawFinish: rawFinish, 
             };
 
-            console.log('JSON.parse(data).text', JSON.parse(data).text)
-
             // @todo use this.wall.actions() instead
             let available = [];
             available.push('build_castle');
             available.push('build_windmill');
             available.push('build_warehouse');
 
-            console.log('come vanno le cose', this.gameStatus['user_' + this.clients[i].id]);
-            console.log(this.wall.showQueue());
+            // @todo ma siamo sicuri ci serva ancora gameStatus??
+            // console.log('come vanno le cose', this.gameStatus['user_' + this.clients[i].id]);
+            console.log('wall queue', this.wall.showQueue());
             if (this.wall === null) {
                 throw 'wall is not yet defined'
             }
 
-            if (this.wall.canBuild(JSON.parse(data).text.replace('build_', '')) === true) {
-                if (available.includes(JSON.parse(data).text)) {
-                    this.wall.addToQueue({ name: JSON.parse(data).text.replace('build_', ''), level: 1 })
-                    this.clients[i].ws.send(JSON.stringify({
-                        buildings: this.tree.listBuildings(),
-                        id: this.clients[i].id,
-                        numberOfClients: this.clients.length,
-                        numberOfFields: this.numberOfFields,
-                        numberOfVillages: this.numberOfVillages,
-                        queue: queue,
-                        rawseconds: this.seconds,
-                        rawFinish: rawFinish,
-                        secondiAllaFine: secondsToBuild,
-                        seconds: clock.time(this.seconds),
-                        tree: this.tree,
-                        type: JSON.parse(data).text,
-                    }));
+            // @todo che brutto XD
+            let buildingName = JSON.parse(data).text.replace('build_', '');
+            if (buildingName != 'bottone') {
+                let nextLevelOf = this.wall.extractNextLevelOf(buildingName);
+                console.log('queue', this.wall.showQueue());
+                console.log('try to build',buildingName,'of level',nextLevelOf);
+                if (this.wall.canBuild(buildingName, nextLevelOf) === true) {
+                    if (this.wall.actions().includes(JSON.parse(data).text)) {
+                        console.log('add',buildingName,'at level',nextLevelOf,'in the queue');
 
-                    let now = Date.now();
-                    this.gameStatus['user_' + this.clients[i].id].queue.push({
-                        user: 'user_' + this.clients[i].id,
-                        action: JSON.parse(data).text,
-                        start: now,
-                        end: now + (secondsToBuild * 1000),
-                        level: 1,
-                    });
+                        // @todo whenever a building were added to the queue
+                        // there should be also end of construction
+                        // and also the user
+                        this.wall.addToQueue({ name: JSON.parse(data).text.replace('build_', ''), level: nextLevelOf })
+
+                        console.log('now the queue is',this.wall.showQueue());
+                        this.clients[i].ws.send(JSON.stringify({
+                            buildings: this.tree.listBuildings(),
+                            id: this.clients[i].id,
+                            numberOfClients: this.clients.length,
+                            numberOfFields: this.numberOfFields,
+                            numberOfVillages: this.numberOfVillages,
+                            queue: queue,
+                            rawseconds: this.seconds,
+                            rawFinish: rawFinish,
+                            secondiAllaFine: secondsToBuild,
+                            seconds: clock.time(this.seconds),
+                            tree: this.tree,
+                            type: JSON.parse(data).text,
+                        }));
+
+                        let now = Date.now();
+                        this.gameStatus['user_' + this.clients[i].id].queue.push({
+                            user: 'user_' + this.clients[i].id,
+                            action: JSON.parse(data).text,
+                            start: now,
+                            end: now + (secondsToBuild * 1000),
+                            level: nextLevelOf,
+                        });
+                    } else {
+                        console.log(available, 'does not contains', JSON.parse(data).text)
+                    }
                 } else {
-                    console.log(available, 'does not contains', JSON.parse(data).text)
+                    console.error('cant build', JSON.parse(data).text.replace('build_', ''), 'of level', nextLevelOf);
                 }
-            } else {
-                console.error('cant build', JSON.parse(data).text.replace('build_', ''));
             }
 
             this.clients[i].ws.send(JSON.stringify({
@@ -141,8 +149,6 @@ class Messenger {
                 tree: this.tree,
             }))
         }
-
-        this.displayClients();
     }
 
     // @todo rename it asap

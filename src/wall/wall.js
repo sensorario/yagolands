@@ -34,7 +34,7 @@ class Wall {
 
         let availability = false;
         let required = null;
-
+        
         for (let t = 0; t < this.tree.length; t++) {
             if (this.tree[t].name == buildingName && this.tree[t].level == level) {
                 availability = this.tree[t];
@@ -42,8 +42,9 @@ class Wall {
                     if (this.queue.length === 0) {
                         return true;
                     }
+                } else {
+                    required = this.tree[t].required;
                 }
-                required = this.tree[t].required;
             }
         }
 
@@ -54,11 +55,20 @@ class Wall {
 
             let requirement = this.getRequirementsOf(buildingName, level);
             if (this.isRequirementPresent(requirement)) {
+
+                for (let q = 0; q < this.queue.length; q++) {
+                    if (this.queue[q].name == buildingName && this.queue[q].level == level) {
+                        return false;
+                    }
+                }
+
                 return true;
+            } else {
+                return false
             }
         }
 
-        return false;
+        return true;
     }
 
     requirementOf(buildingName) {

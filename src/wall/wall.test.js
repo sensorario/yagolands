@@ -72,3 +72,18 @@ test(`extracrt next level of a given building`, () => {
     wall.addToQueue({ name: 'castle', level: 2 });
     expect(wall.extractNextLevelOf('castle')).toEqual(3);
 })
+
+test.only(`extracrt next level of a given building`, () => {
+    const wall = new Wall();
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    wall.addToQueue({ name: 'castle', level: 1 });
+    wall.addToQueue({ name: 'warehouse', level: 1 });
+    wall.addToQueue({ name: 'windmill', level: 1 });
+    expect(wall.canBuild('castle', 2)).toEqual(true);
+})

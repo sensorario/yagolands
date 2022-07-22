@@ -28,10 +28,10 @@ let warehouse = new Building();
 let windmill = new Building();
 let barracks = new Building();
 
-castle.define('castle', [ {name: 'iron', amount: 1}, {name: 'wood', amount: 1}, {name: 'clay', amount: 1}, {name: 'grain', amount: 1} ]);
-warehouse.define('warehouse', [ {name: 'iron', amount: 1}, {name: 'wood', amount: 2}, {name: 'clay', amount: 1}, {name: 'grain', amount: 2}, ]);
-windmill.define('windmill', [ {name: 'iron', amount: 2}, {name: 'wood', amount: 3}, {name: 'clay', amount: 3}, {name: 'grain', amount: 1}, ]);
-barracks.define('windmill', [ {name: 'iron', amount: 0}, {name: 'wood', amount: 3}, {name: 'clay', amount: 3}, {name: 'grain', amount: 1}, ]);
+castle.define('castle', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0} ]);
+warehouse.define('warehouse', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
+windmill.define('windmill', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
+barracks.define('barracks', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
 
 // websockets
 server.on('connection', ws => {
@@ -42,20 +42,15 @@ server.on('connection', ws => {
 })
 
 // configure building Tree
-tree.addBuilding('castle', castle);
+tree.addBuilding('castle', castle, 1);
 tree.addBuilding('warehouse', warehouse, 1, 'castle', 1);
 tree.addBuilding('windmill', windmill, 1, 'castle', 1);
 tree.addBuilding('castle', castle, 2, 'windmill', 1);
 tree.addBuilding('castle', castle, 2, 'warehouse', 1);
 tree.addBuilding('barracks', barracks, 1, 'castle', 2);
 
-//{ name: 'castle', level: 1 },
-//{ name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
-//{ name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
-//{ name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
-//{ name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
-
 let mappone = tree.createMap();
+console.log(mappone);
 wall.treeBuilding(mappone);
 
 game.addBuildingTreeAndUnits(tree, [firstUnit]);

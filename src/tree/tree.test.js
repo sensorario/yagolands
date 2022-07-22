@@ -10,7 +10,7 @@ test('list all buildings inside the tree', () => {
 
     xxx = new Building()
     xxx.define({ name: 'iron', amount: 10 });
-    t.addBuilding('xxx', xxx);
+    t.addBuilding('xxx', xxx, 1);
 
     expect(t.listBuildings()).toEqual([{ name: 'xxx' }]);
     expect(t.numbweOfBuildings()).toEqual(1);
@@ -28,7 +28,7 @@ test('only first item in the tree must can have empty requirements', () => {
     const t = new Tree;
     builder = new Building()
     builder.define({ name: 'iron', amount: 10 });
-    t.addBuilding('xxx', builder);
+    t.addBuilding('xxx', builder, 1);
     expect(function () { t.addBuilding('xxx', builder); }).toThrow('building xxx must have requirements')
 });
 
@@ -41,7 +41,7 @@ test('accept independent building', () => {
     const t = new Tree;
     builder = new Building();
     builder.define({ name: 'iron', amount: 10 });
-    t.addBuilding('castle', builder);
+    t.addBuilding('castle', builder, 1);
     expect(t.isEmpty()).toBe(false);
 });
 
@@ -49,7 +49,7 @@ test('extract one single building from the tree', () => {
     const t = new Tree;
     builder = new Building()
     builder.define({ name: 'iron', amount: 10 });
-    t.addBuilding('xxx', builder);
+    t.addBuilding('xxx', builder, 1);
     expect(t.extractBuilding('xxx')).toEqual({ name: 'xxx' });
 });
 
@@ -65,7 +65,7 @@ test('detect first building has no requirements', () => {
     const t = new Tree;
     builder = new Building()
     builder.define({ name: 'iron', amount: 10 });
-    t.addBuilding('castle', builder);
+    t.addBuilding('castle', builder, 1);
     let req = { requiredBuilding: 'castle', requiredLevel: 1 };
     expect(t.needsRequirements(req)).toBe(false);
 });
@@ -79,7 +79,7 @@ test('detect other building has requirements', () => {
     let stall = new Building();
 
     castle.define({ name: 'iron', amount: 10, });
-    t.addBuilding('castle', castle);
+    t.addBuilding('castle', castle, 1);
 
     house.define({ name: 'iron', amount: 10, });
     t.addBuilding('house', house, 1, 'castle', 1);
@@ -121,7 +121,7 @@ test('only one item in the tree can have empty requirements', () => {
     ]);
     house.define({ name: 'iron', amount: 10, });
 
-    t.addBuilding('castle', castle);
+    t.addBuilding('castle', castle, 1);
 
     expect(t.firstBuilding()).toEqual({castle: 1});
     expect(t.get('castle')).toEqual({
@@ -141,7 +141,7 @@ test('create a map', () => {
     castle.define([ { name: 'iron', amount: 10, }, { name: 'clay', amount: 11 } ]);
     house.define([ { name: 'iron', amount: 9, }, { name: 'clay', amount: 9 } ]);
 
-    t.addBuilding('castle', castle);
+    t.addBuilding('castle', castle, 1);
     t.addBuilding('house', house, 1, 'castle', 1);
 
     expect(t.createMap()).toEqual([
