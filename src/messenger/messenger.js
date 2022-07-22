@@ -40,10 +40,14 @@ class Messenger {
         this.clients = newClients
 
         // @todo use this.wall.actions instead
+        // @todo use this.wall.actions instead
+        // @todo use this.wall.actions instead
+        // @todo use this.wall.actions instead
         let mappa = [];
         mappa['build_castle'] = 0;
         mappa['build_windmill'] = 1;
         mappa['build_warehouse'] = 2;
+        mappa['build_barracks'] = 3;
 
         for(let i = 0; i < this.clients.length; i++) {
 
@@ -54,6 +58,7 @@ class Messenger {
                 };
             }
 
+            // #todo create un componente a [parte per calcolare i secondi ...
             // @todo ensure first building must be built
             //let firstBuilding = this.tree.firstBuilding();
             let secondsToBuild = 0;
@@ -64,10 +69,16 @@ class Messenger {
                 }
             }
 
+            console.log(' >>> secondsToBuild:', secondsToBuild);
+
             let adesso = Date.now();
             let now = new Date(adesso);
             let rawFinish = adesso + secondsToBuild * 1000;
             let finish = new Date(rawFinish);
+
+            console.log(' >>> now:', now);
+            console.log(' >>> finish:', finish);
+
             let queue = {
                 now: now,
                 rawNon: adesso,
@@ -76,10 +87,14 @@ class Messenger {
             };
 
             // @todo use this.wall.actions() instead
+            // @todo use this.wall.actions() instead
+            // @todo use this.wall.actions() instead
+            // @todo use this.wall.actions() instead
             let available = [];
             available.push('build_castle');
             available.push('build_windmill');
             available.push('build_warehouse');
+            available.push('build_barracks');
 
             // @todo ma siamo sicuri ci serva ancora gameStatus??
             // console.log('come vanno le cose', this.gameStatus['user_' + this.clients[i].id]);
