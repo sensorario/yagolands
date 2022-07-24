@@ -138,6 +138,7 @@ class Wall {
             return false;
         }
 
+        console.log('outcome', outcome);
         throw 'Oops!'
     }
 
@@ -172,13 +173,13 @@ class Wall {
             }
         }
 
-        return false;
+        return { name: buildingName, level: level - 1 };
     }
 
     // dto: { buildingName: ?, yid: ? }
     extractNextLevelOf(dto) {
         if (typeof dto.yid === 'undefined') {
-            throw 'yid is missing'
+            throw 'yid is missing in extractNextLevelOf(dto)'
         }
         if (typeof this.queue[dto.yid] === 'undefined') { return 1; }
         let levelFound = 0;

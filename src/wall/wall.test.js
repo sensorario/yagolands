@@ -22,7 +22,7 @@ test(`extract single requirement from a given building and level`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    expect(wall.requirementOf('windmill')).toEqual({ name: 'castle', level: 1 })
+    expect(wall.getRequirementsOf('windmill', 1)).toEqual({ name: 'castle', level: 1 })
 })
 
 test(`detect a building without requirements cannot be built`, () => {
@@ -97,7 +97,7 @@ test(`extract requirements of a given building`, () => {
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
     wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
-    expect(wall.getRequirementsOf('warehouse', 1)).toEqual({ name: 'castle', level: 1 })
+    expect(wall.getRequirementsOf('warehouse', 1, fakeId)).toEqual({ name: 'castle', level: 1 })
 })
 
 test(`deny builfing that is already in the queue`, () => {
@@ -125,8 +125,7 @@ test(`extracrt next level of a given building`, () => {
     ]);
     wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
     wall.addToQueue({ name: 'castle', level: 2, yid: fakeId });
-    expect(wall.extractNextLevelOf({ buildingName: 'castle', yid: fakeId, })).toEqual(3);
-})
+    expect(wall.extractNextLevelOf({ buildingName: 'castle', yid: fakeId, })).toEqual(3); })
 
 test(`can build next level of a building whenever requirements are satisfied`, () => {
     const wall = new Wall();
