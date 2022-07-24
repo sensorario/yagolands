@@ -20,9 +20,32 @@ class Wall {
         return this.buildingActions;
     }
 
-    canBuild(buildingName, level) {
+    canBuild(buildingName, level, yid) {
+        let outcome = {};
+        outcome.buildingName = buildingName;
+        outcome.level = level;
+
+        // @todo move into another service
+        let inQueue = false;
+        let queue = this.queue[yid];
+        for (let q in queue) {
+            if (queue[q].name == buildingName && queue[q].level == level) {
+                inQueue = true;
+            }
+        }
+
+        if (inQueue === true) {
+            return false;
+        }
+
+        outcome.inQueue = inQueue;
+
         if (typeof level == 'undefined') {
-            throw 'level is missing in canBuild(buildingName, level)';
+            throw 'level is missing in canBuild(buildingName, level, yid)';
+        }
+
+        if (typeof yid == 'undefined') {
+            throw 'yid is missing in canBuild(buildingName, level, yid)';
         }
 
         // if item is already in the queue, ... return false
@@ -32,6 +55,16 @@ class Wall {
             }
         }
 
+        outcome.isInTree = false;
+        for (let t in this.tree) {
+            if (this.tree[t].name === buildingName) {
+                outcome.isInTree = true;
+            }
+        }
+
+        if (outcome.isInTree === false) {
+        }
+
         let availability = false;
         let required = null;
         
@@ -39,7 +72,7 @@ class Wall {
             if (this.tree[t].name == buildingName && this.tree[t].level == level) {
                 availability = this.tree[t];
                 if (typeof this.tree[t].required === 'undefined') {
-                    if (this.queue.length === 0) {
+                    if (outcome.inQueue === false) {
                         return true;
                     }
                 } else {
@@ -48,27 +81,64 @@ class Wall {
             }
         }
 
-        if (required !== null) {
-            if (this.queue.length === 0) {
-                return false;
-            }
-
-            let requirement = this.getRequirementsOf(buildingName, level);
-            if (this.isRequirementPresent(requirement)) {
-
-                for (let q = 0; q < this.queue.length; q++) {
-                    if (this.queue[q].name == buildingName && this.queue[q].level == level) {
-                        return false;
-                    }
+        outcome.requirement = this.getRequirementsOf(buildingName, level);
+        outcome.requirementSatisfied = false;
+        if (outcome.requirement != false) {
+            for(let q in this.queue[yid]) {
+                if (
+                    this.queue[yid][q].name == outcome.requirement.name
+                    && this.queue[yid][q].level == outcome.requirement.level
+                ) {
+                    outcome.requirementSatisfied = true;
                 }
-
-                return true;
-            } else {
-                return false
             }
         }
 
-        return true;
+        if (required !== null) {
+            if (outcome.inQueue) {
+                for (let q = 0; q < this.queue[yid].length; q++) {
+                    if (this.queue[yid][q].name == buildingName && this.queue[yid][q].level == level) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        outcome.queue = this.queue[yid];
+
+        if (
+            outcome.isInTree === true
+            && outcome.required === null
+            && outcome.inQueue === true
+        ) {
+            return false;
+        }
+
+        if (outcome.isInTree === true && outcome.required === null) {
+            return true;
+        }
+
+        if (
+            outcome.isInTree === false
+        ) {
+            return false;
+        }
+
+        if (
+            outcome.isInTree == true
+            && outcome.inQueue == false
+            && outcome.requirementSatisfied === true
+        ) {
+            return true;
+        }
+
+
+        if (outcome.requirement !== false && outcome.requirementSatisfied === false) {
+            return false;
+        }
+
+        throw 'Oops!'
     }
 
     requirementOf(buildingName) {
@@ -79,8 +149,16 @@ class Wall {
         }
     }
 
-    addToQueue(b) {
-        this.queue.push(b);
+    addToQueue(dto) {
+        if (typeof dto.yid === 'undefined') {
+            throw 'yid is missing in wall.addToQueue(dto)'
+        }
+
+        if (typeof this.queue[dto.yid] === 'undefined') {
+            this.queue[dto.yid] = new Array();
+        }
+
+        this.queue[dto.yid].push(dto);
     }
 
     showQueue() { return this.queue }
@@ -93,24 +171,21 @@ class Wall {
                 }
             }
         }
+
+        return false;
     }
 
-    isRequirementPresent(req) {
-        for (let t = 0; t < this.queue.length; t++) {
-            if (
-                this.queue[t].name == req.name
-                && this.queue[t].level == req.level
-            ) {
-                return true;
-            }
+    // dto: { buildingName: ?, yid: ? }
+    extractNextLevelOf(dto) {
+        if (typeof dto.yid === 'undefined') {
+            throw 'yid is missing'
         }
-    }
-
-    extractNextLevelOf(buildingName) {
+        if (typeof this.queue[dto.yid] === 'undefined') { return 1; }
         let levelFound = 0;
-        for (let t = 0; t < this.queue.length; t++) {
-            if (this.queue[t].name == buildingName) {
-                levelFound = this.queue[t].level;
+        let queue = this.queue[dto.yid];
+        for (let t = 0; t < queue.length; t++) {
+            if (queue[t].name == dto.buildingName) {
+                levelFound = queue[t].level;
             }
         }
         return levelFound + 1;

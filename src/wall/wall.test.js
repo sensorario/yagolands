@@ -1,6 +1,7 @@
 const Wall = require('./wall')
+const fakeId = 'f4k3-y4g0';
 
-test(`list of available actions`, () => {
+test(`extract abailable actions from inserted buildings`, () => {
     const wall = new Wall();
     wall.treeBuilding([
         { name: 'castle', level: 1 },
@@ -10,9 +11,42 @@ test(`list of available actions`, () => {
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
     expect(wall.actions()).toEqual([ 'build_castle', 'build_windmill', 'build_warehouse' ])
+})
+
+test(`extract single requirement from a given building and level`, () => {
+    const wall = new Wall();
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
     expect(wall.requirementOf('windmill')).toEqual({ name: 'castle', level: 1 })
-    expect(wall.canBuild('windmill', 1)).toEqual(false)
-    expect(wall.canBuild('castle', 1)).toEqual(true)
+})
+
+test(`detect a building without requirements cannot be built`, () => {
+    const wall = new Wall();
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    expect(wall.canBuild('windmill', 1, fakeId)).toEqual(false)
+})
+
+test(`can built first building`, () => {
+    const wall = new Wall();
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    expect(wall.canBuild('castle', 1, fakeId)).toEqual(true)
 })
 
 test(`deny building that is not present in the tree`, () => {
@@ -24,12 +58,10 @@ test(`deny building that is not present in the tree`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    expect(wall.canBuild('foo', 1)).toEqual(false)
+    expect(wall.canBuild('foo', 1, fakeId)).toEqual(false)
 })
 
-test(`allow next level of an already built building`, () => { })
-
-test(`list of available actions`, () => {
+test(`deny building of allready built building`, () => {
     const wall = new Wall();
     wall.treeBuilding([
         { name: 'castle', level: 1 },
@@ -38,14 +70,37 @@ test(`list of available actions`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1 });
-    expect(wall.canBuild('castle', 1)).toEqual(false)
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
+    expect(wall.canBuild('castle', 1, fakeId)).toEqual(false)
+})
+
+test(`can build whenever requirements are satisfied`, () => {
+    const wall = new Wall();
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
+    expect(wall.canBuild('warehouse', 1, fakeId)).toEqual(true)
+})
+
+test(`extract requirements of a given building`, () => {
+    const wall = new Wall();
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
     expect(wall.getRequirementsOf('warehouse', 1)).toEqual({ name: 'castle', level: 1 })
-    expect(wall.isRequirementPresent({ name: 'castle', level: 1 })).toEqual(true)
-    expect(wall.canBuild('warehouse', 1)).toEqual(true)
 })
 
-test(`list of available actions`, () => {
+test(`deny builfing that is already in the queue`, () => {
     const wall = new Wall();
     wall.treeBuilding([
         { name: 'castle', level: 1 },
@@ -54,9 +109,9 @@ test(`list of available actions`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1 });
-    wall.addToQueue({ name: 'warehouse', level: 1 });
-    expect(wall.canBuild('warehouse', 1)).toEqual(false)
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'warehouse', level: 1, yid: fakeId });
+    expect(wall.canBuild('warehouse', 1, fakeId)).toEqual(false)
 })
 
 test(`extracrt next level of a given building`, () => {
@@ -68,12 +123,12 @@ test(`extracrt next level of a given building`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1 });
-    wall.addToQueue({ name: 'castle', level: 2 });
-    expect(wall.extractNextLevelOf('castle')).toEqual(3);
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'castle', level: 2, yid: fakeId });
+    expect(wall.extractNextLevelOf({ buildingName: 'castle', yid: fakeId, })).toEqual(3);
 })
 
-test.only(`extracrt next level of a given building`, () => {
+test(`can build next level of a building whenever requirements are satisfied`, () => {
     const wall = new Wall();
     wall.treeBuilding([
         { name: 'castle', level: 1 },
@@ -82,8 +137,8 @@ test.only(`extracrt next level of a given building`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1 });
-    wall.addToQueue({ name: 'warehouse', level: 1 });
-    wall.addToQueue({ name: 'windmill', level: 1 });
-    expect(wall.canBuild('castle', 2)).toEqual(true);
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'warehouse', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'windmill', level: 1, yid: fakeId });
+    expect(wall.canBuild('castle', 2, fakeId)).toEqual(true);
 })

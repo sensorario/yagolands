@@ -3,13 +3,13 @@ let clock = new Clock();
 
 class Messenger {
 
-    constructor(tree, gameStatus) {
+    constructor(tree) {
         this.clients = [];
+        this.sessionCliens = [];
         this.numberOfVillages = 0;
         this.numberOfFields = 0;
         this.seconds = 0;
         this.tree = tree;
-        this.gameStatus = gameStatus;
         this.wall = null;
     }
 
@@ -19,6 +19,13 @@ class Messenger {
 
         let send = false;
         let newClients = []
+
+        // clean session from not yet connected clients
+        for(let yid in this.sessionCliens) {
+            if(this.sessionCliens[yid].ws.readyState === 3) {
+                delete this.sessionCliens[yid];
+            }
+        }
 
         for(let i = 0; i < this.clients.length; i++) {
             if (
@@ -38,6 +45,8 @@ class Messenger {
         }
 
         this.clients = newClients
+        console.log(this.sessionCliens);
+
 
         // @todo use this.wall.actions instead
         // @todo use this.wall.actions instead
@@ -49,26 +58,10 @@ class Messenger {
         mappa['build_warehouse'] = 2;
         mappa['build_barracks'] = 3;
 
+        let action = JSON.parse(data).text;
+        let secondsToBuild = this.extractSeconds(action);
+
         for(let i = 0; i < this.clients.length; i++) {
-
-            // @todo recueprare la coda da un layer di persistenza
-            if (typeof this.gameStatus['user_' + this.clients[i].id] === 'undefined') {
-                this.gameStatus['user_' + this.clients[i].id] = {
-                    queue: [],
-                };
-            }
-
-            // #todo create un componente a [parte per calcolare i secondi ...
-            // @todo ensure first building must be built
-            //let firstBuilding = this.tree.firstBuilding();
-            let secondsToBuild = 0;
-            if (typeof mappa[JSON.parse(data).text] !== 'undefined') {
-                let indice = mappa[JSON.parse(data).text];
-                for(let i = 0; i < this.tree.buildings[indice].building.res.length; i++) {
-                    secondsToBuild += this.tree.buildings[indice].building.res[i].amount;
-                }
-            }
-
             console.log(' >>> secondsToBuild:', secondsToBuild);
 
             let adesso = Date.now();
@@ -96,27 +89,35 @@ class Messenger {
             available.push('build_warehouse');
             available.push('build_barracks');
 
-            // @todo ma siamo sicuri ci serva ancora gameStatus??
-            // console.log('come vanno le cose', this.gameStatus['user_' + this.clients[i].id]);
             console.log('wall queue', this.wall.showQueue());
             if (this.wall === null) {
                 throw 'wall is not yet defined'
             }
 
             // @todo che brutto XD
+            let yid = message.yid;
             let buildingName = JSON.parse(data).text.replace('build_', '');
             if (buildingName != 'bottone') {
-                let nextLevelOf = this.wall.extractNextLevelOf(buildingName);
-                console.log('queue', this.wall.showQueue());
-                console.log('try to build',buildingName,'of level',nextLevelOf);
-                if (this.wall.canBuild(buildingName, nextLevelOf) === true) {
+                let nextLevelOf = this.wall.extractNextLevelOf({
+                    buildingName: buildingName,
+                    yid: yid,
+                });
+                console.log('queue:', this.wall.showQueue());
+                console.log('wanted:',buildingName,'level:',nextLevelOf);
+                if (this.wall.canBuild(buildingName, nextLevelOf, yid) === true) {
                     if (this.wall.actions().includes(JSON.parse(data).text)) {
                         console.log('add',buildingName,'at level',nextLevelOf,'in the queue');
 
                         // @todo whenever a building were added to the queue
                         // there should be also end of construction
                         // and also the user
-                        this.wall.addToQueue({ name: JSON.parse(data).text.replace('build_', ''), level: nextLevelOf })
+
+                        if (typeof yid === 'undefined') { throw 'yid is missing' }
+                        this.wall.addToQueue({
+                            name: JSON.parse(data).text.replace('build_', ''),
+                            level: nextLevelOf,
+                            yid,
+                        })
 
                         console.log('now the queue is',this.wall.showQueue());
                         this.clients[i].ws.send(JSON.stringify({
@@ -133,21 +134,14 @@ class Messenger {
                             tree: this.tree,
                             type: JSON.parse(data).text,
                         }));
-
-                        let now = Date.now();
-                        this.gameStatus['user_' + this.clients[i].id].queue.push({
-                            user: 'user_' + this.clients[i].id,
-                            action: JSON.parse(data).text,
-                            start: now,
-                            end: now + (secondsToBuild * 1000),
-                            level: nextLevelOf,
-                        });
                     } else {
                         console.log(available, 'does not contains', JSON.parse(data).text)
                     }
                 } else {
                     console.error('cant build', JSON.parse(data).text.replace('build_', ''), 'of level', nextLevelOf);
                 }
+            } else {
+                // @todo non dovremmo mai capitare qui, ...
             }
 
             this.clients[i].ws.send(JSON.stringify({
@@ -174,6 +168,10 @@ class Messenger {
 
     addClient(client) {
         this.clients.push(client);
+        if (typeof this.sessionCliens[client.id] === 'undefined') {
+            this.sessionCliens[client.id] = new Array();
+        }
+        this.sessionCliens[client.id] = client;
     }
 
     updateSeconds(seconds) {
@@ -182,6 +180,23 @@ class Messenger {
 
     setWall(wall) {
         this.wall = wall
+    }
+
+    // @todo move into an external collaborator
+    extractSeconds(action) {
+        let mappa = [];
+        mappa['build_castle'] = 0;
+        mappa['build_windmill'] = 1;
+        mappa['build_warehouse'] = 2;
+        mappa['build_barracks'] = 3;
+        let secs = 0;
+        if (typeof mappa[action] !== 'undefined') {
+            let index = mappa[action];
+            for(let i = 0; i < this.tree.buildings[index].building.res.length; i++) {
+                secs += this.tree.buildings[index].building.res[i].amount;
+            }
+        }
+        return secs;
     }
 
 }
