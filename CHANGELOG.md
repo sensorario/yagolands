@@ -19,4 +19,3 @@
  - server send tree data to the client
  - provide distinct list of buildings inserted in the tree
  - detect next level of a certain building
- - add timing component for timing calculations
