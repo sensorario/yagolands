@@ -1,5 +1,7 @@
-const Clock = require('./../clock/clock')
-let clock = new Clock();
+const Clock = require('./../clock/clock');
+const timing = require('./../timing/timing');
+
+const clock = new Clock();
 
 class Messenger {
 
@@ -18,6 +20,21 @@ class Messenger {
         let message = JSON.parse(data);
         if (message.to === '') { message.to = 'all' }
 
+        if (message.text != 'connection-call') {
+            if (typeof message.position === 'undefined') {
+                console.log(message);
+                for (let c in this.clients) {
+                    if (this.clients[c].id == message.yid) {
+                        console.log('error message is sent to the client', c);
+                        this.clients[c].ws.send(JSON.stringify({
+                            type: 'error_message',
+                            message: 'building position in missing',
+                        }));
+                    }
+                }
+            }
+        }
+
         let newClients = []
         for(let c in this.clients) {
             if (this.clients[c].ws.readyState === 3) { console.log(`${c} is no more connected`) }
@@ -25,24 +42,6 @@ class Messenger {
         }
 
         this.clients = newClients
-        let ids = [];
-        for(let c in this.clients) {
-            ids.push(this.clients[c].id);
-        }
-        console.log(ids);
-
-        // @todo use this.wall.actions instead
-        // @todo use this.wall.actions instead
-        // @todo use this.wall.actions instead
-        // @todo use this.wall.actions instead
-        let mappa = [];
-        mappa['build_castle'] = 0;
-        mappa['build_windmill'] = 1;
-        mappa['build_warehouse'] = 2;
-        mappa['build_barracks'] = 3;
-
-        let action = JSON.parse(data).text;
-        let secondsToBuild = this.extractSeconds(action);
 
         for(let i = 0; i < this.clients.length; i++) {
             console.log(`a global message will be sent to client ${this.clients[i].id} with positions`);
@@ -60,6 +59,12 @@ class Messenger {
         }
 
         for(let i = 0; i < this.clients.length; i++) {
+            if (message.yid != this.clients[i].id) continue;
+            let yid = message.yid;
+            let buildingName = JSON.parse(data).text.replace('build_', '');
+            let nextLevelOf = this.wall.extractNextLevelOf({ buildingName: buildingName, yid: this.clients[i].id });
+            let action = JSON.parse(data).text;
+            let secondsToBuild = timing.getTimeToBuild(action, nextLevelOf, this.tree);
             let adesso = Date.now();
             let now = new Date(adesso);
             let rawFinish = adesso + secondsToBuild * 1000;
@@ -70,28 +75,22 @@ class Messenger {
             available.push('build_windmill');
             available.push('build_warehouse');
             available.push('build_barracks');
-            if (this.wall === null) {
-                throw 'wall is not yet defined'
-            }
-            let yid = message.yid;
-            let buildingName = JSON.parse(data).text.replace('build_', '');
+            if (this.wall === null) { throw 'wall is not yet defined' }
             if (buildingName != 'connection-call') {
-                let nextLevelOf = this.wall.extractNextLevelOf({
-                    buildingName: buildingName,
-                    yid: yid,
-                });
                 console.log('queue:', this.wall.showQueue());
                 console.log('wanted:',buildingName,'level:',nextLevelOf);
                 if (this.wall.canBuild(buildingName, nextLevelOf, yid) === true) {
                     if (this.wall.actions().includes(JSON.parse(data).text)) {
                         console.log('add',buildingName,'at level',nextLevelOf,'in the queue');
                         if (typeof yid === 'undefined') { throw 'yid is missing' }
-                        if (yid == this.clients[i].id)
+
                         this.wall.addToQueue({
                             name: JSON.parse(data).text.replace('build_', ''),
                             level: nextLevelOf,
-                            yid,
+                            yid: yid,
+                            position: message.position,
                         })
+
                         console.log('now the queue is',this.wall.showQueue());
                         console.log(`a message will be sent to client ${this.clients[i].id} and yid is ${yid}`);
                         if (yid == this.clients[i].id)
@@ -131,23 +130,6 @@ class Messenger {
 
     setWall(wall) {
         this.wall = wall
-    }
-
-    // @todo move into an external collaborator
-    extractSeconds(action) {
-        let mappa = [];
-        mappa['build_castle'] = 0;
-        mappa['build_windmill'] = 1;
-        mappa['build_warehouse'] = 2;
-        mappa['build_barracks'] = 3;
-        let secs = 0;
-        if (typeof mappa[action] !== 'undefined') {
-            let index = mappa[action];
-            for(let i = 0; i < this.tree.buildings[index].building.res.length; i++) {
-                secs += this.tree.buildings[index].building.res[i].amount;
-            }
-        }
-        return secs;
     }
 
 }

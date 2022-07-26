@@ -70,7 +70,7 @@ test(`deny building of allready built building`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
     expect(wall.canBuild('castle', 1, fakeId)).toEqual(false)
 })
 
@@ -83,7 +83,7 @@ test(`can build whenever requirements are satisfied`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
     expect(wall.canBuild('warehouse', 1, fakeId)).toEqual(true)
 })
 
@@ -96,7 +96,7 @@ test(`extract requirements of a given building`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
     expect(wall.getRequirementsOf('warehouse', 1, fakeId)).toEqual({ name: 'castle', level: 1 })
 })
 
@@ -109,8 +109,8 @@ test(`deny builfing that is already in the queue`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
-    wall.addToQueue({ name: 'warehouse', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
+    wall.addToQueue({ name: 'warehouse', level: 1, yid: fakeId, position: 42 });
     expect(wall.canBuild('warehouse', 1, fakeId)).toEqual(false)
 })
 
@@ -123,8 +123,8 @@ test(`extracrt next level of a given building`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
-    wall.addToQueue({ name: 'castle', level: 2, yid: fakeId });
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
+    wall.addToQueue({ name: 'castle', level: 2, yid: fakeId, position: 42 });
     expect(wall.extractNextLevelOf({ buildingName: 'castle', yid: fakeId, })).toEqual(3); })
 
 test(`can build next level of a building whenever requirements are satisfied`, () => {
@@ -136,8 +136,8 @@ test(`can build next level of a building whenever requirements are satisfied`, (
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId });
-    wall.addToQueue({ name: 'warehouse', level: 1, yid: fakeId });
-    wall.addToQueue({ name: 'windmill', level: 1, yid: fakeId });
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
+    wall.addToQueue({ name: 'warehouse', level: 1, yid: fakeId, position: 42 });
+    wall.addToQueue({ name: 'windmill', level: 1, yid: fakeId, position: 42 });
     expect(wall.canBuild('castle', 2, fakeId)).toEqual(true);
 })
