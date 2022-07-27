@@ -1,3 +1,5 @@
+const generator = require('./../../generator');
+
 class Wall {
 
     constructor() {
@@ -151,15 +153,21 @@ class Wall {
     }
 
     addToQueue(dto) {
-        if (typeof dto.yid === 'undefined') {
-            throw 'yid is missing in wall.addToQueue(dto)'
+        if (typeof dto.position === 'undefined') {
+            throw 'position is mandatory whenever buiding were added to queue';
         }
 
         if (typeof this.queue[dto.yid] === 'undefined') {
             this.queue[dto.yid] = new Array();
         }
 
-        this.queue[dto.yid].push(dto);
+        // @todo ensure this is the only building in same position
+
+        this.queue[dto.yid].push({
+            name: dto.name,
+            level: dto.level,
+            position: dto.position,
+        });
     }
 
     showQueue() { return this.queue }
