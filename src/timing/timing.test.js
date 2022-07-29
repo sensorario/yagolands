@@ -2,7 +2,7 @@ const Tree = require('./../tree/tree');
 const Building = require('./../building/building');
 const timing = require('./timing');
 
-test('first test', () => {
+test('calculate duration using resources amount', () => {
     let tree = new Tree();
     let castle = new Building();
     castle.define('castle', [
