@@ -55,6 +55,7 @@ class Messenger {
                 rawseconds: this.seconds,
                 seconds: clock.time(this.seconds),
                 tree: this.tree,
+                queue: this.wall.showQueue()[this.clients[i].id],
             }))
         }
 
