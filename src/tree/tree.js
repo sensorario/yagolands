@@ -124,6 +124,14 @@ class Tree {
         return map;
     }
 
+    actions() {
+        let listActions = new Array();
+        for (let t in this.table) {
+            listActions.push('build_' + this.table[t].building);
+        }
+        return listActions;
+    }
+
 }
 
 module.exports = Tree

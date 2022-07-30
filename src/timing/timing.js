@@ -1,23 +1,32 @@
-function funzione(action, level, tree) {
-
-    // @todo extract from the tree
-    let mappa = [];
-    mappa['build_castle'] = 0;
-    mappa['build_windmill'] = 1;
-    mappa['build_warehouse'] = 2;
-    mappa['build_barracks'] = 3;
-
-    let secs = 0;
-
-    if (typeof mappa[action] !== 'undefined') {
-        let index = mappa[action];
-        for(let i = 0; i < tree.buildings[index].building.res.length; i++) {
-            // @todo moltiplicare per 1.3 volte ad ogni livello
-            secs += (level * tree.buildings[index].building.res[i].amount);
+function risorse (action, tree) {
+    let myBuilding = action.replace('build_', '');
+    let allBuildings = tree.buildings;
+    for(let i = 0; i < allBuildings.length; i++) {
+        let currentBuilding = allBuildings[i];
+        if (currentBuilding.name == myBuilding) {
+            return currentBuilding.building.res;
         }
     }
 
-    return secs;
+    return 0;
 }
 
-module.exports.getTimeToBuild = funzione;
+function funzione(action, level, tree) {
+    let iSecondi = risorse(action, tree);
+    let somma = 0;
+    for(let s in iSecondi) {
+        somma += risorsa(iSecondi[s].amount, level);
+    }
+    return somma;
+}
+
+function risorsa(start, level, somma = 0) {
+    return level === 1
+        ? start
+        : parseInt(risorsa(start, level - 1, somma) * 1.3);
+}
+
+module.exports = {
+    getTimeToBuild: funzione,
+    risorsa,
+};
