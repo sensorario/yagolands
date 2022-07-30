@@ -149,3 +149,18 @@ test('create a map', () => {
         { name: 'house', level: 1, required: { name: 'castle', level: 1 } },
     ]);
 })
+
+test('build an array of actions', () => {
+    const t = new Tree;
+
+    let castle = new Building();
+    let house = new Building();
+
+    castle.define([ { name: 'iron', amount: 10, }, { name: 'clay', amount: 11 } ]);
+    house.define([ { name: 'iron', amount: 9, }, { name: 'clay', amount: 9 } ]);
+
+    t.addBuilding('castle', castle, 1);
+    t.addBuilding('house', house, 1, 'castle', 1);
+
+    expect(t.actions()).toEqual([ 'build_castle', 'build_house' ]);
+})
