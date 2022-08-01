@@ -4,7 +4,7 @@
 
 ### Getting started
 
- - git clone https://github.com/sensorario/websocket-node-chat.git
+ - git clone https://github.com/sensorario/yagolands.git
  - cd websocket-node-chat
  - npm install
  - npm test
