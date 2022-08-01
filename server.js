@@ -28,10 +28,30 @@ let warehouse = new Building();
 let windmill = new Building();
 let barracks = new Building();
 
-castle.define('castle', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0} ]);
-warehouse.define('warehouse', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
-windmill.define('windmill', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
-barracks.define('barracks', [ {name: 'iron', amount: 3}, {name: 'wood', amount: 0}, {name: 'clay', amount: 0}, {name: 'grain', amount: 0}, ]);
+castle.define('castle', [
+    {name: 'iron', amount: 10},
+    {name: 'wood', amount: 10},
+    {name: 'clay', amount: 10},
+    {name: 'grain', amount: 10},
+]);
+warehouse.define('warehouse', [
+    {name: 'iron', amount: 10},
+    {name: 'wood', amount: 11},
+    {name: 'clay', amount: 10},
+    {name: 'grain', amount: 10},
+]);
+windmill.define('windmill', [
+    {name: 'iron', amount: 10},
+    {name: 'wood', amount: 12},
+    {name: 'clay', amount: 10},
+    {name: 'grain', amount: 10},
+]);
+barracks.define('barracks', [
+    {name: 'iron', amount: 10},
+    {name: 'wood', amount: 11},
+    {name: 'clay', amount: 11},
+    {name: 'grain', amount: 11},
+]);
 
 // websockets
 server.on('connection', ws => {
