@@ -27,30 +27,42 @@ let castle = new Building();
 let warehouse = new Building();
 let windmill = new Building();
 let barracks = new Building();
+let edificioCiccio = new Building();
 
+edificioCiccio.define('edificioCiccio', [
+    {name: 'iron', amount: 10},
+    {name: 'wood', amount: 10},
+    {name: 'clay', amount: 10},
+    {name: 'grain', amount: 10},
+    {name: 'cippa', amount: 10},
+]);
 castle.define('castle', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 10},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
+    {name: 'cippa', amount: 10},
 ]);
 warehouse.define('warehouse', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 11},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
+    {name: 'cippa', amount: 10},
 ]);
 windmill.define('windmill', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 12},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
+    {name: 'cippa', amount: 10},
 ]);
 barracks.define('barracks', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 11},
     {name: 'clay', amount: 11},
     {name: 'grain', amount: 11},
+    {name: 'cippa', amount: 10},
 ]);
 
 // websockets
@@ -68,6 +80,7 @@ tree.addBuilding('windmill', windmill, 1, 'castle', 1);
 tree.addBuilding('castle', castle, 2, 'windmill', 1);
 tree.addBuilding('castle', castle, 2, 'warehouse', 1);
 tree.addBuilding('barracks', barracks, 1, 'castle', 2);
+tree.addBuilding('edificioCiccio', edificioCiccio, 1, 'castle', 1);
 
 let mappone = tree.createMap();
 console.log(mappone);
