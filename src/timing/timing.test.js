@@ -17,9 +17,9 @@ test('calculate duration using resources amount', () => {
 });
 
 test('other calc', () => {
-    expect(timing.foo(22, 1)).toEqual(22);
-    expect(timing.foo(22, 2)).toEqual(28);
-    expect(timing.foo(22, 3)).toEqual(36);
-    expect(timing.foo(22, 4)).toEqual(46);
-    expect(timing.foo(22, 5)).toEqual(59);
+    expect(timing.risorsa(22, 1)).toEqual(22);
+    expect(timing.risorsa(22, 2)).toEqual(28);
+    expect(timing.risorsa(22, 3)).toEqual(36);
+    expect(timing.risorsa(22, 4)).toEqual(46);
+    expect(timing.risorsa(22, 5)).toEqual(59);
 });
