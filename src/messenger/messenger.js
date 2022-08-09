@@ -20,21 +20,6 @@ class Messenger {
         let message = JSON.parse(data);
         if (message.to === '') { message.to = 'all' }
 
-        if (message.text != 'connection-call') {
-            if (typeof message.position === 'undefined') {
-                console.log(message);
-                for (let c in this.clients) {
-                    if (this.clients[c].id == message.yid) {
-                        console.log('error message is sent to the client', c);
-                        this.clients[c].ws.send(JSON.stringify({
-                            type: 'error_message',
-                            message: 'building position in missing',
-                        }));
-                    }
-                }
-            }
-        }
-
         let newClients = []
         for(let c in this.clients) {
             if (this.clients[c].ws.readyState === 3) { console.log(`${c} is no more connected`) }
