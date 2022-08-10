@@ -157,6 +157,10 @@ class Wall {
             throw 'position is mandatory whenever buiding were added to queue';
         }
 
+        if (typeof dto.yid === 'undefined') {
+            throw 'yid is missing';
+        }
+
         if (typeof this.queue[dto.yid] === 'undefined') {
             this.queue[dto.yid] = new Array();
         }
@@ -167,10 +171,17 @@ class Wall {
             name: dto.name,
             level: dto.level,
             position: dto.position,
+            visible: true,
         });
     }
 
-    showQueue() { return this.queue }
+    showQueue() {
+        return this.queue;
+    }
+
+    getQueueOf(dto) {
+        return this.queue[dto.yid];
+    }
 
     getRequirementsOf(buildingName, level) {
         for (let t = 0; t < this.tree.length; t++) {

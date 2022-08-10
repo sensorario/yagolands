@@ -74,6 +74,24 @@ test(`deny building of allready built building`, () => {
     expect(wall.canBuild('castle', 1, fakeId)).toEqual(false)
 })
 
+test(`mark first building as visible whenever no other building are in queue`, () => {
+    const wall = new Wall();
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
+    expect(wall.getQueueOf({yid:fakeId})).toEqual([{
+        name: 'castle',
+        level: 1,
+        position: 42,
+        visible: true,
+    }])
+})
+
 test(`can build whenever requirements are satisfied`, () => {
     const wall = new Wall();
     wall.treeBuilding([
