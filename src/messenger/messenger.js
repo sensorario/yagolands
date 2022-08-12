@@ -31,6 +31,8 @@ class Messenger {
         for(let i = 0; i < this.clients.length; i++) {
             console.log(`a global message will be sent to client ${this.clients[i].id} with positions`);
             this.clients[i].ws.send(JSON.stringify({
+                foo: 'var',
+                visibilities: this.wall.buildingStatus({ yid: this.clients[i].id}),
                 buildings: this.tree.listBuildings(),
                 id: this.clients[i].id,
                 message: JSON.parse(data),
@@ -48,6 +50,7 @@ class Messenger {
             if (message.yid != this.clients[i].id) continue;
             console.log(`a message will be sent to client ${this.clients[i].id}`);
             let yid = message.yid;
+            console.log('data', data);
             let buildingName = JSON.parse(data).text.replace('build_', '');
             let nextLevelOf = this.wall.extractNextLevelOf({ buildingName: buildingName, yid: this.clients[i].id });
             let action = JSON.parse(data).text;
@@ -82,6 +85,7 @@ class Messenger {
                         console.log(`a message will be sent to client ${this.clients[i].id} and yid is ${yid}`);
                         if (yid == this.clients[i].id)
                         this.clients[i].ws.send(JSON.stringify({
+                            visibilities: 123, // this.wall.buildingStatus({ yid: this.clients[i].id}),
                             buildings: this.tree.listBuildings(),
                             id: this.clients[i].id,
                             numberOfClients: this.clients.length,

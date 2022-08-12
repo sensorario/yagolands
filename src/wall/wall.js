@@ -210,6 +210,27 @@ class Wall {
         }
         return levelFound + 1;
     }
+
+    buildingStatus(dto) {
+        let statuses = [];
+        for (let t in this.tree) {
+            if (!statuses.includes(this.tree[t].name)) {
+                statuses.push(this.tree[t].name);
+            }
+        }
+        let leveled = [];
+        for (let s in statuses) {
+            let maxLevelOf = 0;
+            for (let q in this.queue[dto.yid]) {
+                if (this.queue[dto.yid][q].name == statuses[s]) {
+                    maxLevelOf = this.queue[dto.yid][q].level;
+                }
+            }
+            let visibility = this.canBuild(statuses[s], maxLevelOf + 1, dto.yid);
+            leveled.push({ name: statuses[s], level: maxLevelOf, visible: visibility });
+        }
+        return leveled;
+    }
 }
 
 module.exports = Wall;
