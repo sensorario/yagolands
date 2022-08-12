@@ -31,7 +31,6 @@ class Messenger {
         for(let i = 0; i < this.clients.length; i++) {
             console.log(`a global message will be sent to client ${this.clients[i].id} with positions`);
             this.clients[i].ws.send(JSON.stringify({
-                foo: 'var',
                 visibilities: this.wall.buildingStatus({ yid: this.clients[i].id}),
                 buildings: this.tree.listBuildings(),
                 id: this.clients[i].id,
