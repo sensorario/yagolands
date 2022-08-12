@@ -88,7 +88,7 @@ test(`deny building of allready built building`, () => {
     ]);
 })
 
-test(`mark first building as visible whenever no other building are in queue`, () => {
+test(`mark building as visible whenever buildable`, () => {
     const wall = new Wall();
     wall.treeBuilding([
         { name: 'castle', level: 1 },
