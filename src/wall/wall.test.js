@@ -10,7 +10,11 @@ test(`extract abailable actions from inserted buildings`, () => {
         { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
-    expect(wall.actions()).toEqual([ 'build_castle', 'build_windmill', 'build_warehouse' ])
+    expect(wall.actions()).toEqual([
+        'build_castle',
+        'build_windmill',
+        'build_warehouse',
+    ])
 })
 
 test(`extract single requirement from a given building and level`, () => {
@@ -35,6 +39,11 @@ test(`detect a building without requirements cannot be built`, () => {
         { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
     ]);
     expect(wall.canBuild('windmill', 1, fakeId)).toEqual(false)
+    expect(wall.buildingStatus({ yid: fakeId })).toEqual([
+        { name: 'castle', level: 0, visible: true },
+        { name: 'windmill', level: 0, visible: false },
+        { name: 'warehouse', level: 0, visible: false },
+    ]);
 })
 
 test(`can built first building`, () => {
@@ -72,6 +81,29 @@ test(`deny building of allready built building`, () => {
     ]);
     wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
     expect(wall.canBuild('castle', 1, fakeId)).toEqual(false)
+    expect(wall.buildingStatus({ yid: fakeId })).toEqual([
+        { name: 'castle', level: 1, visible: false },
+        { name: 'windmill', level: 0, visible: true },
+        { name: 'warehouse', level: 0, visible: true },
+    ]);
+})
+
+test(`mark building as visible whenever buildable`, () => {
+    const wall = new Wall();
+    wall.treeBuilding([
+        { name: 'castle', level: 1 },
+        { name: 'windmill', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'warehouse', level: 1, required: { name: 'castle', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'windmill', level: 1 } },
+        { name: 'castle', level: 2, required: { name: 'warehouse', level: 1 } },
+    ]);
+    wall.addToQueue({ name: 'castle', level: 1, yid: fakeId, position: 42 });
+    expect(wall.getQueueOf({yid:fakeId})).toEqual([{
+        name: 'castle',
+        level: 1,
+        position: 42,
+        visible: true,
+    }])
 })
 
 test(`can build whenever requirements are satisfied`, () => {

@@ -157,6 +157,10 @@ class Wall {
             throw 'position is mandatory whenever buiding were added to queue';
         }
 
+        if (typeof dto.yid === 'undefined') {
+            throw 'yid is missing';
+        }
+
         if (typeof this.queue[dto.yid] === 'undefined') {
             this.queue[dto.yid] = new Array();
         }
@@ -167,10 +171,17 @@ class Wall {
             name: dto.name,
             level: dto.level,
             position: dto.position,
+            visible: true,
         });
     }
 
-    showQueue() { return this.queue }
+    showQueue() {
+        return this.queue;
+    }
+
+    getQueueOf(dto) {
+        return this.queue[dto.yid];
+    }
 
     getRequirementsOf(buildingName, level) {
         for (let t = 0; t < this.tree.length; t++) {
@@ -198,6 +209,27 @@ class Wall {
             }
         }
         return levelFound + 1;
+    }
+
+    buildingStatus(dto) {
+        let statuses = [];
+        for (let t in this.tree) {
+            if (!statuses.includes(this.tree[t].name)) {
+                statuses.push(this.tree[t].name);
+            }
+        }
+        let leveled = [];
+        for (let s in statuses) {
+            let maxLevelOf = 0;
+            for (let q in this.queue[dto.yid]) {
+                if (this.queue[dto.yid][q].name == statuses[s]) {
+                    maxLevelOf = this.queue[dto.yid][q].level;
+                }
+            }
+            let visibility = this.canBuild(statuses[s], maxLevelOf + 1, dto.yid);
+            leveled.push({ name: statuses[s], level: maxLevelOf, visible: visibility });
+        }
+        return leveled;
     }
 }
 

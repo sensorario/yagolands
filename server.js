@@ -80,7 +80,7 @@ tree.addBuilding('windmill', windmill, 1, 'castle', 1);
 tree.addBuilding('castle', castle, 2, 'windmill', 1);
 tree.addBuilding('castle', castle, 2, 'warehouse', 1);
 tree.addBuilding('barracks', barracks, 1, 'castle', 2);
-tree.addBuilding('edificioCiccio', edificioCiccio, 1, 'castle', 1);
+tree.addBuilding('edificioCiccio', edificioCiccio, 1, 'castle', 2);
 
 let mappone = tree.createMap();
 console.log(mappone);

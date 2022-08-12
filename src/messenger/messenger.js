@@ -20,21 +20,6 @@ class Messenger {
         let message = JSON.parse(data);
         if (message.to === '') { message.to = 'all' }
 
-        if (message.text != 'connection-call') {
-            if (typeof message.position === 'undefined') {
-                console.log(message);
-                for (let c in this.clients) {
-                    if (this.clients[c].id == message.yid) {
-                        console.log('error message is sent to the client', c);
-                        this.clients[c].ws.send(JSON.stringify({
-                            type: 'error_message',
-                            message: 'building position in missing',
-                        }));
-                    }
-                }
-            }
-        }
-
         let newClients = []
         for(let c in this.clients) {
             if (this.clients[c].ws.readyState === 3) { console.log(`${c} is no more connected`) }
@@ -46,6 +31,7 @@ class Messenger {
         for(let i = 0; i < this.clients.length; i++) {
             console.log(`a global message will be sent to client ${this.clients[i].id} with positions`);
             this.clients[i].ws.send(JSON.stringify({
+                visibilities: this.wall.buildingStatus({ yid: this.clients[i].id}),
                 buildings: this.tree.listBuildings(),
                 id: this.clients[i].id,
                 message: JSON.parse(data),
@@ -97,6 +83,7 @@ class Messenger {
                         console.log(`a message will be sent to client ${this.clients[i].id} and yid is ${yid}`);
                         if (yid == this.clients[i].id)
                         this.clients[i].ws.send(JSON.stringify({
+                            visibilities: 123, // this.wall.buildingStatus({ yid: this.clients[i].id}),
                             buildings: this.tree.listBuildings(),
                             id: this.clients[i].id,
                             numberOfClients: this.clients.length,
