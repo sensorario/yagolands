@@ -29,40 +29,29 @@ let windmill = new Building();
 let barracks = new Building();
 let edificioCiccio = new Building();
 
-edificioCiccio.define('edificioCiccio', [
-    {name: 'iron', amount: 10},
-    {name: 'wood', amount: 10},
-    {name: 'clay', amount: 10},
-    {name: 'grain', amount: 10},
-    {name: 'cippa', amount: 10},
-]);
 castle.define('castle', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 10},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
-    {name: 'cippa', amount: 10},
 ]);
 warehouse.define('warehouse', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 11},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
-    {name: 'cippa', amount: 10},
 ]);
 windmill.define('windmill', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 12},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
-    {name: 'cippa', amount: 10},
 ]);
 barracks.define('barracks', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 11},
     {name: 'clay', amount: 11},
     {name: 'grain', amount: 11},
-    {name: 'cippa', amount: 10},
 ]);
 
 // websockets
@@ -80,7 +69,6 @@ tree.addBuilding('windmill', windmill, 1, 'castle', 1);
 tree.addBuilding('castle', castle, 2, 'windmill', 1);
 tree.addBuilding('castle', castle, 2, 'warehouse', 1);
 tree.addBuilding('barracks', barracks, 1, 'castle', 2);
-tree.addBuilding('edificioCiccio', edificioCiccio, 1, 'castle', 2);
 
 let mappone = tree.createMap();
 console.log(mappone);
@@ -100,14 +88,16 @@ messenger.setState({
 
 // castle of level 2 unlock units
 game.grandUnitBuildiner({ building: 'castle', level: 2 });
+game.start();
 
-function gameStarter() {
-    game.start();
-    setTimeout(() => {
-        seconds++;
-        messenger.updateSeconds(seconds);
-        gameStarter();
-    }, 1000);
-}
+(function loop(dto) {
+    let now = Date.now();
+    let diff = parseInt(Math.floor(now - dto.start)/1000);
+    if (diff != dto.seconds) { dto.seconds = diff; }
+    messenger.updateSeconds(dto.seconds);
+    setTimeout(() => loop(dto), 100);
+})({
+    start: Date.now(),
+    seconds: 0,
+});
 
-gameStarter();
