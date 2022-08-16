@@ -49,6 +49,10 @@ class Messenger {
             if (message.yid != this.clients[i].id) continue;
             console.log(`a message will be sent to client ${this.clients[i].id}`);
             let yid = message.yid;
+            if (typeof JSON.parse(data).text === 'undefined') {
+                console.error('data', data);
+                return;
+            }
             let buildingName = JSON.parse(data).text.replace('build_', '');
             let nextLevelOf = this.wall.extractNextLevelOf({ buildingName: buildingName, yid: this.clients[i].id });
             let action = JSON.parse(data).text;
