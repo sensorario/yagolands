@@ -27,6 +27,7 @@ class Messenger {
             let copy = null;
             let vecchiaCoda = this.wall.showQueue()[dto.cookie];
             this.wall.updateQueue(dto.client, vecchiaCoda);
+            this.wall.removeQueue(dto.cookie);
         }
 
         // questa pulizia dovrebbe essere fatta nel loop

@@ -183,6 +183,10 @@ class Wall {
         this.queue[yid] = vecchiaCoda;
     }
 
+    removeQueue(yid) {
+        delete this.queue[yid];
+    }
+
     getQueueOf(dto) {
         return this.queue[dto.yid];
     }
