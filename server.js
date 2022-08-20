@@ -11,7 +11,6 @@ const websocket = require('ws'),
     Village = require('./src/village/village')
     Wall = require('./src/wall/wall')
 
-
 // globals
 let seconds = 0;
 let gameStatus = {};
@@ -57,9 +56,7 @@ barracks.define('barracks', [
 // websockets
 server.on('connection', ws => {
     messenger.addClient({ id: generator.generateID(), ws: ws });
-    ws.on('message', data => {
-        messenger.messenger(data);
-    });
+    ws.on('message', data => { messenger.messenger(data); });
 })
 
 // configure building Tree
@@ -71,7 +68,6 @@ tree.addBuilding('castle', castle, 2, 'warehouse', 1);
 tree.addBuilding('barracks', barracks, 1, 'castle', 2);
 
 let mappone = tree.createMap();
-console.log(mappone);
 wall.treeBuilding(mappone);
 
 game.addBuildingTreeAndUnits(tree, [firstUnit]);

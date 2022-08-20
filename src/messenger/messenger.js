@@ -15,21 +15,41 @@ class Messenger {
     }
 
     messenger (data) {
-        console.log(this.queue);
-
         let message = JSON.parse(data);
-        if (message.to === '') { message.to = 'all' }
+        if (
+            message.to === '@'
+            || typeof message.to === 'undefined'
+        ) { message.to = 'all'; }
 
+        console.log('>>>', message.text);
+        if (message.text === 'glue') {
+            let dto = message.yid;
+            let copy = null;
+            let vecchiaCoda = this.wall.showQueue()[dto.cookie];
+            this.wall.updateQueue(dto.client, vecchiaCoda);
+        }
+
+        // questa pulizia dovrebbe essere fatta nel loop
+        // e non ad ogni chiamata degli utenti
         let newClients = []
         for(let c in this.clients) {
-            if (this.clients[c].ws.readyState === 3) { console.log(`${c} is no more connected`) }
+            if (this.clients[c].ws.readyState === 3) { 
+                console.log(`${this.clients[c].id} is no more connected`);
+            }
             if (this.clients[c].ws.readyState != 3) { newClients.push(this.clients[c]) }
         }
+
+        console.log('[messenger] data: ', data);
+        console.log('[messenger]', {
+            cookieYid: message.cookieYid,
+            yid: message.yid,
+            message: message,
+        });
+        console.log('[messenger] showQueue: ', this.wall.showQueue());
 
         this.clients = newClients
 
         for(let i = 0; i < this.clients.length; i++) {
-            console.log(`a global message will be sent to client ${this.clients[i].id} with positions`);
             this.clients[i].ws.send(JSON.stringify({
                 visibilities: this.wall.buildingStatus({ yid: this.clients[i].id}),
                 buildings: this.tree.listBuildings(),
@@ -47,10 +67,8 @@ class Messenger {
 
         for(let i = 0; i < this.clients.length; i++) {
             if (message.yid != this.clients[i].id) continue;
-            console.log(`a message will be sent to client ${this.clients[i].id}`);
             let yid = message.yid;
             if (typeof JSON.parse(data).text === 'undefined') {
-                console.error('data', data);
                 return;
             }
             let buildingName = JSON.parse(data).text.replace('build_', '');
@@ -69,11 +87,8 @@ class Messenger {
             available.push('build_barracks');
             if (this.wall === null) { throw 'wall is not yet defined' }
             if (buildingName != 'connection-call') {
-                console.log('queue:', this.wall.showQueue());
-                console.log('wanted:',buildingName,'level:',nextLevelOf);
                 if (this.wall.canBuild(buildingName, nextLevelOf, yid) === true) {
                     if (this.wall.actions().includes(JSON.parse(data).text)) {
-                        console.log('add',buildingName,'at level',nextLevelOf,'in the queue');
                         if (typeof yid === 'undefined') { throw 'yid is missing' }
 
                         this.wall.addToQueue({
@@ -83,24 +98,23 @@ class Messenger {
                             position: message.position,
                         })
 
-                        console.log('now the queue is',this.wall.showQueue());
-                        console.log(`a message will be sent to client ${this.clients[i].id} and yid is ${yid}`);
-                        if (yid == this.clients[i].id)
-                        this.clients[i].ws.send(JSON.stringify({
-                            visibilities: 123, // this.wall.buildingStatus({ yid: this.clients[i].id}),
-                            buildings: this.tree.listBuildings(),
-                            id: this.clients[i].id,
-                            numberOfClients: this.clients.length,
-                            numberOfFields: this.numberOfFields,
-                            numberOfVillages: this.numberOfVillages,
-                            queue: queue,
-                            rawseconds: this.seconds,
-                            rawFinish: rawFinish,
-                            secondiAllaFine: secondsToBuild,
-                            seconds: clock.time(this.seconds),
-                            tree: this.tree,
-                            type: JSON.parse(data).text,
-                        }));
+                        if (yid == this.clients[i].id) {
+                            this.clients[i].ws.send(JSON.stringify({
+                                visibilities: 123, // this.wall.buildingStatus({ yid: this.clients[i].id}),
+                                buildings: this.tree.listBuildings(),
+                                id: this.clients[i].id,
+                                numberOfClients: this.clients.length,
+                                numberOfFields: this.numberOfFields,
+                                numberOfVillages: this.numberOfVillages,
+                                queue: queue,
+                                rawseconds: this.seconds,
+                                rawFinish: rawFinish,
+                                secondiAllaFine: secondsToBuild,
+                                seconds: clock.time(this.seconds),
+                                tree: this.tree,
+                                type: JSON.parse(data).text,
+                            }));
+                        }
                     }
                 }
             }

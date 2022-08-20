@@ -179,6 +179,10 @@ class Wall {
         return this.queue;
     }
 
+    updateQueue(yid, vecchiaCoda) {
+        this.queue[yid] = vecchiaCoda;
+    }
+
     getQueueOf(dto) {
         return this.queue[dto.yid];
     }
