@@ -74,7 +74,7 @@ game.addBuildingTreeAndUnits(tree, [firstUnit]);
 
 // @todo make this operation atomic
 game.addDemoUser({ username: 'user', password: 'password', });
-game.addVillage('user', new Village('user', 'sensorario\'s village'));
+// game.addVillage('user', new Village('user', 'sensorario\'s village'));
 
 messenger.setWall(wall);
 messenger.setState({
