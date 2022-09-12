@@ -6,6 +6,7 @@ const clock = new Clock();
 class Messenger {
 
     constructor(tree) {
+        this.chain = [];
         this.clients = [];
         this.numberOfVillages = 0;
         this.numberOfFields = 0;
@@ -27,7 +28,14 @@ class Messenger {
             let copy = null;
             let vecchiaCoda = this.wall.showQueue()[dto.cookie];
             this.wall.updateQueue(dto.client, vecchiaCoda);
-            this.wall.removeQueue(dto.cookie);
+
+            this.chain[dto.client] = dto.cookie;
+
+            console.log('chain', this.chain);
+
+            // se cancallo questo, .. il vecchio client non viene
+            // aggiornato.
+            // this.wall.removeQueue(dto.cookie);
         }
 
         // questa pulizia dovrebbe essere fatta nel loop
@@ -41,12 +49,6 @@ class Messenger {
         }
 
         console.log('[messenger] data: ', data);
-        console.log('[messenger]', {
-            cookieYid: message.cookieYid,
-            yid: message.yid,
-            message: message,
-        });
-        console.log('[messenger] showQueue: ', this.wall.showQueue());
 
         this.clients = newClients
 
