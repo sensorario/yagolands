@@ -83,11 +83,6 @@ class Messenger {
             let rawFinish = adesso + secondsToBuild * 1000;
             let finish = new Date(rawFinish);
             let queue = { now: now, rawNon: adesso, finish: finish, rawFinish: rawFinish };
-            let available = [];
-            available.push('build_castle');
-            available.push('build_windmill');
-            available.push('build_warehouse');
-            available.push('build_barracks');
             if (this.wall === null) { throw 'wall is not yet defined' }
             if (buildingName != 'connection-call') {
                 if (this.wall.canBuild(buildingName, nextLevelOf, yid) === true) {
