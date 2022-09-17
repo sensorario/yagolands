@@ -48,12 +48,13 @@ class Messenger {
             if (this.clients[c].ws.readyState != 3) { newClients.push(this.clients[c]) }
         }
 
+        // @todo yid è inutilmente presente tre volte
         console.log('[messenger] data: ', data);
 
         this.clients = newClients
 
         for(let i = 0; i < this.clients.length; i++) {
-            this.clients[i].ws.send(JSON.stringify({
+            let dto = {
                 visibilities: this.wall.buildingStatus({ yid: this.clients[i].id}),
                 buildings: this.tree.listBuildings(),
                 id: this.clients[i].id,
@@ -65,7 +66,42 @@ class Messenger {
                 seconds: clock.time(this.seconds),
                 tree: this.tree,
                 queue: this.wall.showQueue()[this.clients[i].id],
-            }))
+            };
+
+            // @todo di sicuro ci sono modi migliori
+            let date_ob = new Date();
+            let year = date_ob.getFullYear();
+            let dateMonth = date_ob.getMonth();
+            let intMonth = (dateMonth+1) + '';
+            let month = intMonth.padStart(2, '0');
+            let strDate = date_ob.getDate() + '';
+            let day = strDate.padStart(2, '0');
+            let strHour = date_ob.getHours() + '';
+            let strMinutes = date_ob.getMinutes() + '';
+            let strSeconds = date_ob.getSeconds() + '';
+            let hours = strHour.padStart(2, '0');
+            let minutes = strMinutes.padStart(2, '0');
+            let seconds = strSeconds.padStart(2, '0');
+            let dateDisplay = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+            console.log({
+                message: 'fine costruzione',
+                orario: dateDisplay,
+                secondi: dto.seconds,
+            });
+
+            dto.finishTime = {
+                fineLavori: {
+                    seconds,
+                    minutes,
+                    hours,
+                    day,
+                    month,
+                    year,
+                }
+            };
+
+            this.clients[i].ws.send(JSON.stringify(dto))
         }
 
         for(let i = 0; i < this.clients.length; i++) {
