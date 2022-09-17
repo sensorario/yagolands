@@ -6,6 +6,7 @@ const clock = new Clock();
 class Messenger {
 
     constructor(tree) {
+        this.chain = [];
         this.clients = [];
         this.numberOfVillages = 0;
         this.numberOfFields = 0;
@@ -27,7 +28,14 @@ class Messenger {
             let copy = null;
             let vecchiaCoda = this.wall.showQueue()[dto.cookie];
             this.wall.updateQueue(dto.client, vecchiaCoda);
-            this.wall.removeQueue(dto.cookie);
+
+            this.chain[dto.client] = dto.cookie;
+
+            console.log('chain', this.chain);
+
+            // se cancallo questo, .. il vecchio client non viene
+            // aggiornato.
+            // this.wall.removeQueue(dto.cookie);
         }
 
         // questa pulizia dovrebbe essere fatta nel loop
@@ -41,12 +49,6 @@ class Messenger {
         }
 
         console.log('[messenger] data: ', data);
-        console.log('[messenger]', {
-            cookieYid: message.cookieYid,
-            yid: message.yid,
-            message: message,
-        });
-        console.log('[messenger] showQueue: ', this.wall.showQueue());
 
         this.clients = newClients
 
@@ -81,11 +83,6 @@ class Messenger {
             let rawFinish = adesso + secondsToBuild * 1000;
             let finish = new Date(rawFinish);
             let queue = { now: now, rawNon: adesso, finish: finish, rawFinish: rawFinish };
-            let available = [];
-            available.push('build_castle');
-            available.push('build_windmill');
-            available.push('build_warehouse');
-            available.push('build_barracks');
             if (this.wall === null) { throw 'wall is not yet defined' }
             if (buildingName != 'connection-call') {
                 if (this.wall.canBuild(buildingName, nextLevelOf, yid) === true) {
