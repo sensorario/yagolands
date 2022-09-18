@@ -116,38 +116,8 @@ class Messenger {
                                 type: JSON.parse(data).text,
                             };
 
-                            // @todo di sicuro ci sono modi migliori
-                            // @todo aggiungere a date i scondi necessari per completare la costruzione
-                            let date_ob = new Date();
-                            let year = date_ob.getFullYear();
-                            let dateMonth = date_ob.getMonth();
-                            let intMonth = (dateMonth+1) + '';
-                            let month = intMonth.padStart(2, '0');
-                            let strDate = date_ob.getDate() + '';
-                            let day = strDate.padStart(2, '0');
-                            let strHour = date_ob.getHours() + '';
-                            let strMinutes = date_ob.getMinutes() + '';
-                            let strSeconds = date_ob.getSeconds() + '';
-                            let hours = strHour.padStart(2, '0');
-                            let minutes = strMinutes.padStart(2, '0');
-                            let seconds = strSeconds.padStart(2, '0');
-                            let dateDisplay = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-
-                            console.log({
-                                message: 'fine costruzione',
-                                orario: dateDisplay,
-                                secondi: dto.seconds,
-                            });
-
                             dto.finishTime = {
-                                fineLavori: {
-                                    seconds,
-                                    minutes,
-                                    hours,
-                                    day,
-                                    month,
-                                    year,
-                                }
+                                fine: finish,
                             };
 
                             this.clients[i].ws.send(JSON.stringify(dto));
