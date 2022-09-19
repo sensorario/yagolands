@@ -48,12 +48,13 @@ class Messenger {
             if (this.clients[c].ws.readyState != 3) { newClients.push(this.clients[c]) }
         }
 
+        // @todo yid è inutilmente presente tre volte
         console.log('[messenger] data: ', data);
 
         this.clients = newClients
 
         for(let i = 0; i < this.clients.length; i++) {
-            this.clients[i].ws.send(JSON.stringify({
+            let dto = {
                 visibilities: this.wall.buildingStatus({ yid: this.clients[i].id}),
                 buildings: this.tree.listBuildings(),
                 id: this.clients[i].id,
@@ -65,7 +66,9 @@ class Messenger {
                 seconds: clock.time(this.seconds),
                 tree: this.tree,
                 queue: this.wall.showQueue()[this.clients[i].id],
-            }))
+            };
+
+            this.clients[i].ws.send(JSON.stringify(dto))
         }
 
         for(let i = 0; i < this.clients.length; i++) {
@@ -94,10 +97,11 @@ class Messenger {
                             level: nextLevelOf,
                             yid: yid,
                             position: message.position,
+                            finish: finish,
                         })
 
                         if (yid == this.clients[i].id) {
-                            this.clients[i].ws.send(JSON.stringify({
+                            let dto = {
                                 visibilities: 123, // this.wall.buildingStatus({ yid: this.clients[i].id}),
                                 buildings: this.tree.listBuildings(),
                                 id: this.clients[i].id,
@@ -111,7 +115,13 @@ class Messenger {
                                 seconds: clock.time(this.seconds),
                                 tree: this.tree,
                                 type: JSON.parse(data).text,
-                            }));
+                            };
+
+                            dto.finishTime = {
+                                fine: finish,
+                            };
+
+                            this.clients[i].ws.send(JSON.stringify(dto));
                         }
                     }
                 }
