@@ -167,12 +167,15 @@ class Wall {
 
         // @todo ensure this is the only building in same position
 
-        this.queue[dto.yid].push({
+        let dtoResponse = {
             name: dto.name,
             level: dto.level,
             position: dto.position,
-            visible: true,
-        });
+            visible: true, // che cosa è visible??
+            finish: dto.finish,
+        };
+
+        this.queue[dto.yid].push(dtoResponse);
     }
 
     showQueue() {

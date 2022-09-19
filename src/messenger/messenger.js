@@ -97,6 +97,7 @@ class Messenger {
                             level: nextLevelOf,
                             yid: yid,
                             position: message.position,
+                            finish: finish,
                         })
 
                         if (yid == this.clients[i].id) {
