@@ -144,10 +144,17 @@ test('create a map', () => {
     t.addBuilding('castle', castle, 1);
     t.addBuilding('house', house, 1, 'castle', 1);
 
-    expect(t.createMap()).toEqual([
-        { name: 'castle', level: 1 },
-        { name: 'house', level: 1, required: { name: 'castle', level: 1 } },
-    ]);
+    expect(t.createMap()).toEqual([{
+        name: 'castle',
+        level: 1,
+    }, {
+        name: 'house',
+        level: 1,
+        required: {
+            name: 'castle',
+            level: 1,
+        },
+    }]);
 })
 
 test('build an array of actions', () => {

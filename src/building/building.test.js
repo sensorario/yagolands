@@ -8,7 +8,7 @@ test('building time require building level', () => {
     }, {
         name: 'wood',
         amount: 43,
-    }])
+    }], 1);
 
     expect(function() { building.time() }).toThrow('missing level');
 })
@@ -20,7 +20,7 @@ test('provide resources', () => {
     }, {
         name: 'wood',
         amount: 43,
-    }])
+    }], 1)
 
     expect(building.get())
         .toEqual([{ name: 'iron', amount: 32, }, { name: 'wood', amount: 43, }]);
@@ -39,7 +39,7 @@ test('building time of a building is sum of its resources', () => {
     ];
 
     for (let i = 0; i < data.length; i++) {
-        building.define(data[i].building, data[i].res)
+        building.define(data[i].building, data[i].res, 1);
 
         expect(building.time({level: data[i].level}))
             .toBe(data[i].expectedAmount);
