@@ -9,14 +9,14 @@ test('list all buildings inside the tree', () => {
     const t = new Tree;
 
     xxx = new Building()
-    xxx.define({ name: 'iron', amount: 10 });
+    xxx.define('iron', [], 1);
     t.addBuilding('xxx', xxx, 1);
 
     expect(t.listBuildings()).toEqual([{ name: 'xxx' }]);
     expect(t.numbweOfBuildings()).toEqual(1);
 
     yyy = new Building()
-    yyy.define({ name: 'iron', amount: 10 });
+    yyy.define('iron', [], 1);
     t.addBuilding('yyy', yyy, 1, 'xxx', 1);
     t.addBuilding('xxx', xxx, 2, 'yyy', 1);
 
@@ -27,7 +27,10 @@ test('list all buildings inside the tree', () => {
 test('only first item in the tree must can have empty requirements', () => {
     const t = new Tree;
     builder = new Building()
-    builder.define({ name: 'iron', amount: 10 });
+    builder.define('castle', [{
+        name: 'iron',
+        amount: 10
+        }], 1);
     t.addBuilding('xxx', builder, 1);
     expect(function () { t.addBuilding('xxx', builder); }).toThrow('building xxx must have requirements')
 });
@@ -40,7 +43,7 @@ test('start empty', () => {
 test('accept independent building', () => {
     const t = new Tree;
     builder = new Building();
-    builder.define({ name: 'iron', amount: 10 });
+    builder.define('iron', [], 1);
     t.addBuilding('castle', builder, 1);
     expect(t.isEmpty()).toBe(false);
 });
@@ -48,7 +51,7 @@ test('accept independent building', () => {
 test('extract one single building from the tree', () => {
     const t = new Tree;
     builder = new Building()
-    builder.define({ name: 'iron', amount: 10 });
+    builder.define('iron', [], 1);
     t.addBuilding('xxx', builder, 1);
     expect(t.extractBuilding('xxx')).toEqual({ name: 'xxx' });
 });
@@ -56,7 +59,7 @@ test('extract one single building from the tree', () => {
 test('extract full lookup table from the building tree', () => {
     const t = new Tree;
     builder = new Building()
-    builder.define({ name: 'iron', amount: 10 });
+    builder.define('iron', [], 1);
     t.addBuilding('castle', builder, 1);
     expect(t.lookupTable()).toEqual([{ identifier: 'castle.1', building: 'castle', level: 1, requires: null }]);
 });
@@ -64,7 +67,7 @@ test('extract full lookup table from the building tree', () => {
 test('detect first building has no requirements', () => {
     const t = new Tree;
     builder = new Building()
-    builder.define({ name: 'iron', amount: 10 });
+    builder.define('iron', [], 1);
     t.addBuilding('castle', builder, 1);
     let req = { requiredBuilding: 'castle', requiredLevel: 1 };
     expect(t.needsRequirements(req)).toBe(false);
@@ -78,17 +81,17 @@ test('detect other building has requirements', () => {
     let windmill = new Building();
     let stall = new Building();
 
-    castle.define({ name: 'iron', amount: 10, });
+    castle.define('iron', [], 1);
     t.addBuilding('castle', castle, 1);
 
-    house.define({ name: 'iron', amount: 10, });
+    house.define('iron', [], 1);
     t.addBuilding('house', house, 1, 'castle', 1);
 
-    windmill.define({ name: 'iron', amount: 10, });
+    windmill.define('iron', [], 1);
     t.addBuilding('windmill', windmill, 1, 'castle', 1);
     t.addBuilding('windmill', windmill, 2, 'castle', 3);
 
-    stall.define({ name: 'iron', amount: 10, });
+    stall.define('iron', [], 1);
     t.addBuilding('stall', stall, 1, 'windmill', 1);
     t.addBuilding('stall', stall, 1, 'house', 1);
 
@@ -115,21 +118,18 @@ test('only one item in the tree can have empty requirements', () => {
     let castle = new Building();
     let house = new Building();
 
-    castle.define([
-        { name: 'iron', amount: 10, },
-        { name: 'clay', amount: 11, },
-    ]);
-    house.define({ name: 'iron', amount: 10, });
+    castle.define('castle', [
+        { name: 'iron', amount: 3 },
+        { name: 'clay', amount: 3 },
+    ], 1);
+    house.define('windmill', [
+        { name: 'iron', amount: 3 },
+        { name: 'clay', amount: 3 },
+    ], 1);
 
     t.addBuilding('castle', castle, 1);
 
     expect(t.firstBuilding()).toEqual({castle: 1});
-    expect(t.get('castle')).toEqual({
-       resources: [
-        { amount: 10, name: 'iron', },
-        { amount: 11, name: 'clay', },
-       ]
-    });
 })
 
 test('create a map', () => {
@@ -138,8 +138,8 @@ test('create a map', () => {
     let castle = new Building();
     let house = new Building();
 
-    castle.define([ { name: 'iron', amount: 10, }, { name: 'clay', amount: 11 } ]);
-    house.define([ { name: 'iron', amount: 9, }, { name: 'clay', amount: 9 } ]);
+    castle.define('iron', [], 1);
+    house.define('iron', [], 1);
 
     t.addBuilding('castle', castle, 1);
     t.addBuilding('house', house, 1, 'castle', 1);
@@ -156,8 +156,8 @@ test('build an array of actions', () => {
     let castle = new Building();
     let house = new Building();
 
-    castle.define([ { name: 'iron', amount: 10, }, { name: 'clay', amount: 11 } ]);
-    house.define([ { name: 'iron', amount: 9, }, { name: 'clay', amount: 9 } ]);
+    castle.define('iron', [], 1);
+    house.define('iron', [], 1);
 
     t.addBuilding('castle', castle, 1);
     t.addBuilding('house', house, 1, 'castle', 1);

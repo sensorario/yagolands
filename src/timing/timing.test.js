@@ -10,7 +10,7 @@ test('calculate duration using resources amount', () => {
         { name: 'wood', amount: 18 },
         { name: 'fizz', amount: 31 },
         { name: 'buzz', amount: 24 },
-    ])
+    ], 1)
     tree.addBuilding('castle', castle, 1);
     expect(timing.getTimeToBuild( 'build_castle', 1, tree)).toEqual(95);
     expect(timing.getTimeToBuild( 'build_castle', 2, tree)).toEqual(122);
