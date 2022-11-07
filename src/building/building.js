@@ -3,11 +3,18 @@ class Building {
     constructor() {
         this.name = 'unknown';
         this.res = [];
+        this.ingrombro = 1;
     }
 
-    define(name, res) {
+    define(name, res, ingrombro) {
         // @todo name must be a string
         // @todo resources an array of resources
+
+        if (!ingrombro) {
+            throw 'missing ingrombro';
+        }
+
+        this.ingrombro = ingrombro;
         this.name = name;
         this.res = res;
     }

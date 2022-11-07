@@ -1,15 +1,15 @@
-const websocket = require('ws'),
-    server = new websocket.Server({ port: 12345, }),
-    generator = require('./generator'),
+const websocket = require('ws');
+const server = new websocket.Server({ port: 12345, });
+const generator = require('./generator');
 
-    // import game libraries
-    Game = require('./src/game/game'),
-    Messenger = require('./src/messenger/messenger'),
-    Tree = require('./src/tree/tree'),
-    Building = require('./src/building/building'),
-    Unit = require('./src/unit/unit'),
-    Village = require('./src/village/village')
-    Wall = require('./src/wall/wall')
+// import game libraries
+const Game = require('./src/game/game');
+const Messenger = require('./src/messenger/messenger');
+const Tree = require('./src/tree/tree');
+const Building = require('./src/building/building');
+const Unit = require('./src/unit/unit');
+const Village = require('./src/village/village');
+const Wall = require('./src/wall/wall');
 
 // globals
 let seconds = 0;
@@ -33,25 +33,25 @@ castle.define('castle', [
     {name: 'wood', amount: 10},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
-]);
+], 4);
 warehouse.define('warehouse', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 11},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
-]);
+], 1);
 windmill.define('windmill', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 12},
     {name: 'clay', amount: 10},
     {name: 'grain', amount: 10},
-]);
+], 1);
 barracks.define('barracks', [
     {name: 'iron', amount: 10},
     {name: 'wood', amount: 11},
     {name: 'clay', amount: 11},
     {name: 'grain', amount: 11},
-]);
+], 1);
 
 // websockets
 server.on('connection', ws => {
