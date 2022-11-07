@@ -36,6 +36,7 @@ class Tree {
             building: name,
             level: level,
             requires: requires,
+            ingombro: building.ingombro,
         });
     }
 

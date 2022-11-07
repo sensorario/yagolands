@@ -59,9 +59,15 @@ test('extract one single building from the tree', () => {
 test('extract full lookup table from the building tree', () => {
     const t = new Tree;
     builder = new Building()
-    builder.define('iron', [], 1);
+    builder.define('iron', [], 42);
     t.addBuilding('castle', builder, 1);
-    expect(t.lookupTable()).toEqual([{ identifier: 'castle.1', building: 'castle', level: 1, requires: null }]);
+    expect(t.lookupTable()).toEqual([{
+        identifier: 'castle.1',
+        building: 'castle',
+        level: 1,
+        requires: null,
+        ingombro: 42
+    }]);
 });
 
 test('detect first building has no requirements', () => {
